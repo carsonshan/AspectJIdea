@@ -1,5 +1,8 @@
 package aspectj.in.action.ch05.bean;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
 /**
  * Item
  * <p/>
@@ -10,6 +13,7 @@ public class Item {
 
     private String _id;
     private float _price;
+    static Logger _logger = Logger.getLogger("trace");
 
     public Item(String id, float price) {
         _id = id;
@@ -17,14 +21,17 @@ public class Item {
     }
 
     public String getID() {
+        _logger.info("->Item->getID->Entering");
         return _id;
     }
 
     public float getPrice() {
+        _logger.info("->Item->getPrice->Entering");
         return _price;
     }
 
     public String toString() {
+        _logger.info("->Item->toString->Entering");
         return "Item: " + _id;
     }
 }

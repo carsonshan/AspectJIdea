@@ -4,6 +4,7 @@ import aspectj.in.action.ch05.bean.Inventory;
 import aspectj.in.action.ch05.bean.Item;
 import aspectj.in.action.ch05.bean.ShoppingCart;
 import aspectj.in.action.ch05.op.ShoppingCartOperator;
+import org.apache.log4j.Logger;
 
 /**
  * Author: Noprom <tyee.noprom@qq.com>
@@ -11,7 +12,11 @@ import aspectj.in.action.ch05.op.ShoppingCartOperator;
  */
 public class Test {
 
+    static Logger _logger = Logger.getLogger("trace");
+
     public static void main(String[] args) {
+        _logger.info("->Test->main->Entering");
+
         Inventory inventory = new Inventory();
         Item item1 = new Item("1", 30);
         Item item2 = new Item("2", 31);

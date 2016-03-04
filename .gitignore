@@ -1,2 +1,3 @@
 .idea
-AspectJIdea.iml
+*.log
+*.iml
