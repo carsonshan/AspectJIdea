@@ -15,7 +15,7 @@ public class Test {
     static Logger _logger = Logger.getLogger("trace");
 
     public static void main(String[] args) {
-        _logger.info("->Test->main->Entering");
+        _logger.info("Test->main->Entering");
 
         Inventory inventory = new Inventory();
         Item item1 = new Item("1", 30);
