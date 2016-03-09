@@ -1,5 +1,9 @@
 package aspectj.trace.code.asjectj;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * TraceApp Demo
  *
@@ -7,6 +11,8 @@ package aspectj.trace.code.asjectj;
  * Date: 16/3/4 下午4:40.
  */
 public aspect TraceApp extends IndentedLogging {
+
+    protected String outFilePath = docPath + "/out.txt";
 
     // 拦截 bar 的执行
     pointcut barPoint(): execution(* bar());
@@ -23,6 +29,14 @@ public aspect TraceApp extends IndentedLogging {
     // 获取main函数的执行
     pointcut mainPoint(): execution(* main(..));
 
+    after(): mainPoint() {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     protected pointcut loggedOperations():
 //            (execution(* *.*(..))
 //            || execution(*.new(..)))
@@ -32,10 +46,26 @@ public aspect TraceApp extends IndentedLogging {
         String methodName = thisJoinPoint.getStaticPart().getSignature().toString();
         String sourceLine = thisJoinPoint.getStaticPart().getSourceLocation().toString();
         if (!methodName.contains("java")) {
-            if (this.caller != null && !this.caller.contains("init")) {
-                System.out.print(this.caller + " ");
-                System.out.println("-->" + methodName + " at " + sourceLine);
+            if (this.caller != null
+                //&& !this.caller.contains("init")
+                    ) {
+                try {
+                    writer = new FileWriter(new File(outFilePath));
+                    System.out.print(this.caller + " ");
+                    System.out.println("-->" + methodName + " at " + sourceLine);
+                    writer.append(this.caller + " ");
+                    writer.append("-->" + methodName + " at " + sourceLine + "\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
+
 }

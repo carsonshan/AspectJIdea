@@ -8,13 +8,18 @@ package aspectj.trace.code.app;
  */
 public class App {
 
-    public void foo(int number, String name) {
+    private void foo2() {
+        foo(11, "foo2");
+    }
+
+    private void foo(int number, String name) {
         System.out.println("Inside App->foo(), number = " + number + ", name = " + name);
     }
 
-    public void bar() {
+    private void bar() {
         foo(123, "Like");
         System.out.println("Call bar()......");
+        foo2();
     }
 
     public static void main(String[] args) {
