@@ -10,8 +10,14 @@ public class App {
         System.out.println("Inside App->foo(), number = " + number + ", name = " + name);
     }
 
+    public void bar() {
+        foo(123, "Like");
+        System.out.println("Call bar()......");
+    }
+
     public static void main(String[] args) {
         App app = new App();
+        app.bar();
         app.foo(123, "Like");
     }
 }
