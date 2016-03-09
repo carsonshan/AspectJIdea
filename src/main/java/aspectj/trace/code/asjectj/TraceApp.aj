@@ -1,7 +1,5 @@
 package aspectj.trace.code.asjectj;
 
-import org.aspectj.lang.Signature;
-
 /**
  * TraceApp Demo
  *
@@ -9,9 +7,6 @@ import org.aspectj.lang.Signature;
  * Date: 16/3/4 下午4:40.
  */
 public aspect TraceApp extends IndentedLogging {
-
-    // print的切点
-    pointcut printCut(): execution(* java.io.PrintStream.println(..));
 
     // 拦截 bar 的执行
     pointcut barPoint(): execution(* bar());
@@ -25,23 +20,10 @@ public aspect TraceApp extends IndentedLogging {
     // 获取bar流程内的foo的方法的调用
     pointcut fooInBar(): barCFlow() && fooPoint();
 
-    //    pointcut callApp(): call(* foo(int, String));
-//
-//    before(): barCFlow(){
-//        System.out.println("Enter:" + thisJoinPoint);
-//    }
-//
-//    before(): callApp() {
-//        System.out.println("In Aspect TraceApp ------>>>");
-//        System.out.println("Sigunature:" + thisJoinPoint.getStaticPart().getSignature());
-//        System.out.println("Source Line:" + thisJoinPoint.getStaticPart().getSourceLocation());
-//        System.out.println("<<<--- Out Aspect TraceApp ------");
-//    }
-
     protected pointcut loggedOperations():
 //            (execution(* *.*(..))
 //            || execution(*.new(..)))
-            cflow(barPoint()) && !within(IndentedLogging+) && !within(printCut);
+            cflow(barPoint()) && !within(IndentedLogging+);
 
     before(): loggedOperations() {
 
@@ -50,10 +32,5 @@ public aspect TraceApp extends IndentedLogging {
         if (!methodName.contains("java")) {
             System.out.println("-->" + methodName + " at " + sourceLine);
         }
-//
-//        Signature sig = thisJoinPointStaticPart.getSignature();
-//        System.out.println("Entering ["
-//                + sig.getDeclaringType().getName() + "."
-//                + sig.getName() + "]");
     }
 }
