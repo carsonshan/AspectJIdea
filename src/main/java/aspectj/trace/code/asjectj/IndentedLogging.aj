@@ -31,7 +31,6 @@ public abstract aspect IndentedLogging {
         File targetPath = new File(classPath.getParent());
         File docPath = new File(targetPath.getParent());
         this.docPath = docPath.getAbsolutePath() + "/doc";
-
     }
 
     protected int _indentationLevel = 0;
