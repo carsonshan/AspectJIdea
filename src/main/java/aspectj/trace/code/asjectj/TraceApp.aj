@@ -20,17 +20,22 @@ public aspect TraceApp extends IndentedLogging {
     // 获取bar流程内的foo的方法的调用
     pointcut fooInBar(): barCFlow() && fooPoint();
 
+    // 获取main函数的执行
+    pointcut mainPoint(): execution(* main(..));
+
     protected pointcut loggedOperations():
 //            (execution(* *.*(..))
 //            || execution(*.new(..)))
-            cflow(barPoint()) && !within(IndentedLogging+);
+            cflow(mainPoint()) && !within(IndentedLogging+);
 
     before(): loggedOperations() {
-
         String methodName = thisJoinPoint.getStaticPart().getSignature().toString();
         String sourceLine = thisJoinPoint.getStaticPart().getSourceLocation().toString();
         if (!methodName.contains("java")) {
-            System.out.println("-->" + methodName + " at " + sourceLine);
+            if (this.caller != null && !this.caller.contains("init")) {
+                System.out.print(this.caller + " ");
+                System.out.println("-->" + methodName + " at " + sourceLine);
+            }
         }
     }
 }

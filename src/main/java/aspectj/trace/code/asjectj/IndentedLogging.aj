@@ -11,13 +11,16 @@ public abstract aspect IndentedLogging {
     protected int _indentationLevel = 0;
 
     protected abstract pointcut loggedOperations();
+    protected String caller;// 方法调用者
 
     before(): loggedOperations() {
         _indentationLevel++;
+        this.caller = thisJoinPoint.getStaticPart().getSignature().getName();
     }
 
     after(): loggedOperations() {
         _indentationLevel--;
+        this.caller = thisJoinPoint.getStaticPart().getSignature().getName();
     }
 
     before():
