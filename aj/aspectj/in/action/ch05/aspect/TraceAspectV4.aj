@@ -1,7 +1,5 @@
 package aspectj.in.action.ch05.aspect;
 
-import org.aspectj.lang.Signature;
-
 /**
  * TraceAspectV2
  *

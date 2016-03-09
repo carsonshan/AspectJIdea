@@ -1,6 +1,8 @@
-package com.huntdreams.app;
+package aspectj.trace.code.app;
 
 /**
+ * 测试应用程序
+ * <p/>
  * Author: Noprom <tyee.noprom@qq.com>
  * Date: 16/3/4 下午4:38.
  */
