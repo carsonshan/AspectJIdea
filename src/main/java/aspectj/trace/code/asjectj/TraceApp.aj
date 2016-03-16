@@ -26,16 +26,23 @@ public aspect TraceApp extends IndentedLogging {
     }
 
     protected pointcut loggedOperations():
-//            (execution(* *.*(..))
+            (execution(* *.*(..)) ||
 //            || execution(*.new(..)))
-            cflow(mainPoint()) && !within(IndentedLogging+);
+            (cflow(mainPoint()) && !within(IndentedLogging+) ));
 
     before(): loggedOperations() {
         String methodName = thisJoinPoint.getStaticPart().getSignature().toString();
         String sourceLine = thisJoinPoint.getStaticPart().getSourceLocation().toString();
-        // 打印到控制台
-        System.out.print(this.caller + " ");
-        System.out.println("-->" + methodName + " at " + sourceLine);
+
+        if (this.caller != null && methodName != null
+                && !this.caller.equals("println")
+                && !this.caller.equals("out")
+                && !methodName.contains("out")) {
+                 // 打印到控制台
+                System.out.print(this.caller + " ");
+                System.out.println("-->" + methodName + " at " + sourceLine);
+        }
+
 //
 //        if (!methodName.contains("java")) {
 //            if (this.caller != null
