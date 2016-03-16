@@ -1,1 +1,2 @@
-        foo -->void aspectj.trace.code.app.App.foo(int, String) at App.java:15
+B3 -->void aspectj.trace.code.app.App.B3() at App.java:94
+                

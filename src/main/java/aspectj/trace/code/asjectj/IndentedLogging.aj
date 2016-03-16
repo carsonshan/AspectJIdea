@@ -18,7 +18,6 @@ public abstract aspect IndentedLogging {
     // logger
     protected Logger logger = Logger.getLogger(getClass().getName());
 
-
     // docpath
     protected String docPath;
 
@@ -59,11 +58,11 @@ public abstract aspect IndentedLogging {
         for (int i = 0, spaces = _indentationLevel * 4;
              i < spaces; ++i) {
             System.out.print(" ");
-            try {
-                writer.append(" ");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                writer.append(" ");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
