@@ -144,8 +144,29 @@ public class App {
         System.out.println("In C5");
     }
 
+    public void C6() {
+        System.out.println("In C6");
+    }
+
+    public void C7() {
+        System.out.println("In C6");
+    }
+
+    public void C8() {
+        System.out.println("In C6");
+    }
+
+    public void C9() {
+        System.out.println("In C6");
+        C10();
+    }
+
+    public void C10() {
+        System.out.println("In C6");
+    }
+
     public static void main(String[] args) {
         App app = new App();
-        app.A1();
+        app.C9();
     }
 }

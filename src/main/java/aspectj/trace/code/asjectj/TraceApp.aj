@@ -3,6 +3,7 @@ package aspectj.trace.code.asjectj;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.SyncFailedException;
 
 /**
  * TraceApp Demo
@@ -31,6 +32,7 @@ public aspect TraceApp extends IndentedLogging {
             (cflow(mainPoint()) && !within(IndentedLogging+) ));
 
     before(): loggedOperations() {
+        // 调用者信息
         String methodName = thisJoinPoint.getStaticPart().getSignature().toString();
         String sourceLine = thisJoinPoint.getStaticPart().getSourceLocation().toString();
 
@@ -39,8 +41,15 @@ public aspect TraceApp extends IndentedLogging {
                 && !this.caller.equals("out")
                 && !methodName.contains("out")) {
                  // 打印到控制台
-                System.out.print(this.caller + " ");
+                //System.out.print(this.caller + " ");
                 System.out.println("-->" + methodName + " at " + sourceLine);
+
+            // 被调用者信息
+            Object target = thisJoinPoint.getTarget();
+            if (target != null) {
+                System.out.println(target);
+            }
+
         }
 
 //
