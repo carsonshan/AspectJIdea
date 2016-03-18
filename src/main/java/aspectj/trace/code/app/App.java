@@ -149,20 +149,21 @@ public class App {
     }
 
     public void C7() {
-        System.out.println("In C6");
+        System.out.println("In C7");
     }
 
     public void C8() {
-        System.out.println("In C6");
+        System.out.println("In C8");
     }
 
     public void C9() {
-        System.out.println("In C6");
+        System.out.println("In C9");
+        C10();
         C10();
     }
 
     public void C10() {
-        System.out.println("In C6");
+        System.out.println("In C10");
     }
 
     public static void main(String[] args) {

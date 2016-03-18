@@ -42,12 +42,12 @@ public aspect TraceApp extends IndentedLogging {
                 && !methodName.contains("out")) {
                  // 打印到控制台
                 //System.out.print(this.caller + " ");
-                System.out.println("-->" + methodName + " at " + sourceLine);
+                System.out.println("调用者-->" + methodName + " at " + sourceLine);
 
             // 被调用者信息
             Object target = thisJoinPoint.getTarget();
             if (target != null) {
-                System.out.println(target);
+                System.out.println("目标-->" + target);
             }
 
         }
