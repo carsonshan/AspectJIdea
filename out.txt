@@ -3,7 +3,7 @@
             preinitialization(aspectj.trace.code.app.App())	App.java:9
             initialization(aspectj.trace.code.app.App())	App.java:9
                 execution(aspectj.trace.code.app.App())	App.java:9
-        MAIN --> void aspectj.trace.code.app.App.A1()
+        main --> void aspectj.trace.code.app.App.A1()
             execution(void aspectj.trace.code.app.App.A1())	App.java:11
                 void aspectj.trace.code.app.App.A1() --> void aspectj.trace.code.app.App.A2()
                     execution(void aspectj.trace.code.app.App.A2())	App.java:20

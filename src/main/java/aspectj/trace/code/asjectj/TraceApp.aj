@@ -9,7 +9,7 @@ import java.util.Stack;
  *
  * Created by syc on 3/18/16.
  */
-public aspect AspectJ {
+public aspect TraceApp {
 
     // docpath
     private String docPath;
@@ -31,7 +31,7 @@ public aspect AspectJ {
      */
     private OutputStream _OS;
 
-    AspectJ() {
+    TraceApp() {
         // 初始化文件的路径
         // 初始化路径信息
         File classPath = new File(this.getClass().getResource("/").getPath());
@@ -41,7 +41,7 @@ public aspect AspectJ {
         this._SavePath = docPath + "/out.txt";
 
         //程序入口，一般为main
-        _Stack.push("MAIN");
+        _Stack.push("main");
 
         //创建输出流
         try {
@@ -53,7 +53,7 @@ public aspect AspectJ {
 
     pointcut anyFunction(): execution(* *.*(..));
 
-    pointcut loggedOperations(): ((cflow(anyFunction())) && !within(AspectJ));
+    pointcut loggedOperations(): ((cflow(anyFunction())) && !within(aspectj.trace.code.asjectj.TraceApp));
 
     before(): loggedOperations(){
         _indentationLevel++;
@@ -113,7 +113,7 @@ public aspect AspectJ {
         }
     }
 
-    before(): call(* java.io.PrintStream.println(..)) && within(AspectJ+) {
+    before(): call(* java.io.PrintStream.println(..)) && within(aspectj.trace.code.asjectj.TraceApp+) {
         for (int i = 0, spaces = _indentationLevel * 4; i < spaces; ++i) {
             System.out.print(" ");
             //写入文件
