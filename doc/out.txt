@@ -1,2 +1,0 @@
-B3 -->void aspectj.trace.code.app.App.B3() at App.java:94
-                
