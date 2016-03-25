@@ -1,9 +1,4 @@
-package aspectj.trace.code.asjectj;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.SyncFailedException;
+package aspectj.trace.core.asjectj;
 
 /**
  * TraceApp Demo

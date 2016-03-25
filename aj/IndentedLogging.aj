@@ -1,10 +1,9 @@
-package aspectj.trace.code.asjectj;
+package aspectj.trace.core.asjectj;
 
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * IndentedLogging

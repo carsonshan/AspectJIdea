@@ -1,4 +1,4 @@
-package aspectj.trace.code.app;
+package aspectj.trace.core.app;
 
 /**
  * 测试应用程序
