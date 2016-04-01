@@ -79,8 +79,7 @@ public class AjcCompiler {
         classPathDir = classPath.getAbsolutePath();
         sourceFilePath = classPath.getAbsolutePath() + "/sources.lst";
         outFilePath = projectPath.getAbsolutePath() + "/out";
-        destinationPath = "/Users/noprom/Desktop";
-        //ideaPath = "/Applications/IntelliJ IDEA 15.app/Contents/lib/idea_rt.jar";
+        destinationPath = outFilePath;
         ideaPath = loadProperty("idea.jar.path");
     }
 
