@@ -1,6 +1,9 @@
 package aspectj.trace.core.aspectj;
 
 
+import aspectj.trace.core.app.AjcCompiler;
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.util.Stack;
 
@@ -12,8 +15,10 @@ import java.util.Stack;
  */
 public aspect TraceApp {
 
+    Logger logger = Logger.getLogger(getClass());
+
     // docpath
-    private String docPath;
+    private String outFilePath;
 
     /**
      * 写入的文件位置，如果要标准化的话就用 File.separator 定义
@@ -32,14 +37,20 @@ public aspect TraceApp {
      */
     private OutputStream _OS;
 
-    TraceApp() {
+    TraceApp() throws IOException {
+        AjcCompiler ajcCompiler = new AjcCompiler();
         // 初始化文件的路径
         File classPath = new File(this.getClass().getResource("/").getPath());
-        File targetPath = new File(classPath.getParent());
-        File docPath = new File(targetPath.getParent());
-        this.docPath = docPath.getAbsolutePath() + "/doc";
-        this._SavePath = docPath + "/out.txt";
+//        File targetPath = new File(classPath.getParent());
+//        File projectPath = new File(targetPath.getParent());
+//        this.outFilePath = projectPath.getAbsolutePath() + "/out";
+        this._SavePath = classPath.getAbsolutePath() + "/out.txt";
+        logger.debug(ajcCompiler.getOutFilePath());
 
+//        File file = new File(_SavePath);
+//        if (!file.exists()) {
+//            file.createNewFile();
+//        }
         //程序入口，一般为main
         _Stack.push("main");
         //创建输出流

@@ -78,6 +78,7 @@ public class AjcCompiler {
 
         classPathDir = classPath.getAbsolutePath();
         sourceFilePath = classPath.getAbsolutePath() + "/sources.lst";
+        logger.debug(sourceFilePath);
         outFilePath = projectPath.getAbsolutePath() + "/out";
         destinationPath = outFilePath;
         ideaPath = loadProperty("idea.jar.path");
@@ -109,6 +110,7 @@ public class AjcCompiler {
         String execStr = JAVA_PATH + " -cp " + CLASSPATH + " " + className;
         // 去除idea的编译部分
         execStr = execStr.replace(":" + ideaPath, "");
+        logger.debug(execStr);
         Process ps = Runtime.getRuntime().exec(execStr);
         // 得到执行的结果
         String resultStr = loadStream(ps.getInputStream());
