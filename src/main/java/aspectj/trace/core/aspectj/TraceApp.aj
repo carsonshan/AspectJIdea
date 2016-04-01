@@ -105,6 +105,7 @@ public aspect TraceApp {
         }
     }
 
+
     after(): loggedOperations(){
         _indentationLevel--;
         String name = thisJoinPoint.getStaticPart().getSignature().getName();

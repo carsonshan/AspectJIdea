@@ -188,13 +188,5 @@ public class App {
     public static void main(String[] args) throws IOException {
         App app = new App();
         app.A1();
-
-        File file = new File("2.txt");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileWriter fw = new FileWriter(file);
-        fw.write("1");
-        fw.close();
     }
 }

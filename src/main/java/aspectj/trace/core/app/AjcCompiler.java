@@ -22,7 +22,50 @@ public class AjcCompiler {
 
     private String ideaPath;//需要去除的idea自带的编译
 
+    private String sourceFilePath;//需要编译的aj和java代码的文件列表
+
+    private String outFilePath;//输出文件存放路径
+
+    public String getDestinationPath() {
+        return destinationPath;
+    }
+
+    public void setDestinationPath(String destinationPath) {
+        this.destinationPath = destinationPath;
+    }
+
+    public String getIdeaPath() {
+        return ideaPath;
+    }
+
+    public void setIdeaPath(String ideaPath) {
+        this.ideaPath = ideaPath;
+    }
+
+    public String getSourceFilePath() {
+        return sourceFilePath;
+    }
+
+    public void setSourceFilePath(String sourceFilePath) {
+        this.sourceFilePath = sourceFilePath;
+    }
+
+    public String getOutFilePath() {
+        return outFilePath;
+    }
+
+    public void setOutFilePath(String outFilePath) {
+        this.outFilePath = outFilePath;
+    }
+
     public AjcCompiler() {
+        // 初始化文件的路径
+        File classPath = new File(this.getClass().getResource("/").getPath());
+        File targetPath = new File(classPath.getParent());
+        File projectPath = new File(targetPath.getParent());
+
+        sourceFilePath = classPath.getAbsolutePath() + "/sources.lst";
+        outFilePath = projectPath.getAbsolutePath() + "/out";
         destinationPath = "/Users/noprom/Desktop";
         ideaPath = "/Applications/IntelliJ IDEA 15.app/Contents/lib/idea_rt.jar";
     }
@@ -35,7 +78,7 @@ public class AjcCompiler {
         Main compiler = new Main();
         MessageHandler m = new MessageHandler();
         // sources.lst文件中存放的是要编译的java和aj文件列表,一行一个
-        String defaultArgs[] = {"-argfile", "sources.lst", "-1.7"};
+        String defaultArgs[] = {"-argfile", sourceFilePath, "-1.7"};
         compiler.run(defaultArgs, m);
     }
 
@@ -91,7 +134,7 @@ public class AjcCompiler {
     public static void main(String[] args) throws Exception {
         AjcCompiler compiler = new AjcCompiler();
         compiler.compile();
-        compiler.run("outxxx.txt", "App");
+        compiler.run(compiler.getOutFilePath() + "/xxx.txt", "App");
     }
 }
 /**
