@@ -5,6 +5,8 @@ import org.aspectj.bridge.MessageHandler;
 import org.aspectj.tools.ajc.Main;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * AjcCompiler
@@ -25,6 +27,8 @@ public class AjcCompiler {
     private String sourceFilePath;//需要编译的aj和java代码的文件列表
 
     private String outFilePath;//输出文件存放路径
+
+    private String classPathDir;//classpath路径
 
     public String getDestinationPath() {
         return destinationPath;
@@ -58,16 +62,26 @@ public class AjcCompiler {
         this.outFilePath = outFilePath;
     }
 
+    public String getClassPathDir() {
+        return classPathDir;
+    }
+
+    public void setClassPathDir(String classPathDir) {
+        this.classPathDir = classPathDir;
+    }
+
     public AjcCompiler() {
         // 初始化文件的路径
         File classPath = new File(this.getClass().getResource("/").getPath());
         File targetPath = new File(classPath.getParent());
         File projectPath = new File(targetPath.getParent());
 
+        classPathDir = classPath.getAbsolutePath();
         sourceFilePath = classPath.getAbsolutePath() + "/sources.lst";
         outFilePath = projectPath.getAbsolutePath() + "/out";
         destinationPath = "/Users/noprom/Desktop";
-        ideaPath = "/Applications/IntelliJ IDEA 15.app/Contents/lib/idea_rt.jar";
+        //ideaPath = "/Applications/IntelliJ IDEA 15.app/Contents/lib/idea_rt.jar";
+        ideaPath = loadProperty("idea.jar.path");
     }
 
     /**
@@ -129,6 +143,35 @@ public class AjcCompiler {
             buffer.append((char) ptr);
         }
         return buffer.toString();
+    }
+
+    /**
+     * 加载配置文件的内容
+     *
+     * @param property
+     * @return
+     */
+    private String loadProperty(String property) {
+        Properties prop = new Properties();
+        String propertyValue = "";
+        try {
+            //读取属性文件sysconfig.properties
+            InputStream in = new BufferedInputStream(new FileInputStream(getClassPathDir() + "/sysconfig.properties"));
+            prop.load(in);     ///加载属性列表
+            Iterator<String> it = prop.stringPropertyNames().iterator();
+            while (it.hasNext()) {
+                String key = it.next();
+                if (key.equals(property)) {
+                    propertyValue = prop.getProperty(key);
+                    return propertyValue;
+                }
+            }
+            in.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return propertyValue;
     }
 
     public static void main(String[] args) throws Exception {
