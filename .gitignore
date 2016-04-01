@@ -4,5 +4,6 @@
 *.txt
 *.iml
 target
+out
 src/main/resources/sysconfig.properties
 src/main/resources/sources.lst
