@@ -1,5 +1,9 @@
 package aspectj.trace.core.app;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * 测试应用程序
  * <p/>
@@ -181,8 +185,16 @@ public class App {
         System.out.println("In C10");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         App app = new App();
         app.A1();
+
+        File file = new File("2.txt");
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        FileWriter fw = new FileWriter(file);
+        fw.write("1");
+        fw.close();
     }
 }

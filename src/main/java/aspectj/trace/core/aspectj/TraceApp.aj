@@ -1,4 +1,4 @@
-package aspectj.trace.core.asjectj;
+package aspectj.trace.core.aspectj;
 
 
 import java.io.*;
@@ -52,7 +52,7 @@ public aspect TraceApp {
 
     pointcut anyFunction(): execution(* *.*(..));
 
-    pointcut loggedOperations(): ((cflow(anyFunction())) && !within(aspectj.trace.core.asjectj.TraceApp));
+    pointcut loggedOperations(): ((cflow(anyFunction())) && !within(aspectj.trace.core.aspectj.TraceApp));
 
     before(): loggedOperations() {
         _indentationLevel++;
@@ -120,7 +120,7 @@ public aspect TraceApp {
     }
 
 
-    before(): call(* java.io.PrintStream.println(..)) && within(aspectj.trace.core.asjectj.TraceApp+) {
+    before(): call(* java.io.PrintStream.println(..)) && within(aspectj.trace.core.aspectj.TraceApp+) {
         for (int i = 0, spaces = _indentationLevel*4 ; i < spaces; ++i) {
             System.out.print(" ");
             //写入文件

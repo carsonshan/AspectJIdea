@@ -1,4 +1,6 @@
 .idea
 *.log
+*.class
+*.txt
 *.iml
 target

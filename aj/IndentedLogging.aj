@@ -1,4 +1,4 @@
-package aspectj.trace.core.asjectj;
+package aspectj.trace.core.aspectj;
 
 import org.apache.log4j.Logger;
 

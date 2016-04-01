@@ -31,6 +31,12 @@
             <artifactId>aspectjrt</artifactId>
             <version>1.6.7</version>
         </dependency>
+        <!--aspectj tools-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+            <version>1.8.9</version>
+        </dependency>
         <!-- log4j -->
         <dependency>
             <groupId>log4j</groupId>
