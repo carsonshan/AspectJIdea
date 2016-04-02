@@ -25,10 +25,10 @@ public class MainForm extends Component {
     private JPanel rightPanel;                  // 右面板
     private JButton fileChooseBtn;              // 选择文件的按钮
     private JButton compileBtn;                 // 解析的按钮
-    private JTextField filePathTextField;       // 选择文件的位置
     private JTextArea rawOutputTextArea;        // 原始输出
     private JTextArea matchTextArea;            // 匹配区内容
     private JTextArea inputTextArea;            // 输入匹配区内容
+    private JLabel fileNamesLabel;
     private AjcCompiler ajcCompiler;            // Ajc编译器
     private String className;                   // 被编译的文件的类名
 
