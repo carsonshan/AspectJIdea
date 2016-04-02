@@ -1,9 +1,10 @@
-package aspectj.trace.ui.form;
+package aspectj.trace.ui;
 
+import aspectj.trace.core.compiler.AjcCompiler;
+import aspectj.trace.util.FileUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.filechooser.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,7 @@ public class MainForm extends Component {
     private JTextArea rawOutput;                // 原始输出
     private JTextArea matchTextArea;            // 匹配区内容
     private JTextArea inputTextArea;            // 输入匹配区内容
+    private AjcCompiler ajcCompiler;            // Ajc编译器
 
     public MainForm() {
         // 初始化控件的显示
@@ -37,6 +39,9 @@ public class MainForm extends Component {
         inputTextArea.setPreferredSize(new Dimension(1000, 800));
         leftPanel.setPreferredSize(new Dimension(1000, 800));
         rightPanel.setPreferredSize(new Dimension(1000, 800));
+
+        // 初始化ajc编译器
+        ajcCompiler = new AjcCompiler();
 
         // 选择文件按钮点击事件
         fileChooseBtn.addActionListener(new ActionListener() {
@@ -60,24 +65,23 @@ public class MainForm extends Component {
                 });
                 int rVal = chooser.showOpenDialog(MainForm.this); // 显示对话框
                 if (rVal == JFileChooser.APPROVE_OPTION) {// 确定按钮
-                    String fileName = chooser.getSelectedFile().getName(); // 选择文件的文件名
-                    String filePath = chooser.getCurrentDirectory().toString()
+                    final String fileName = chooser.getSelectedFile().getName(); // 选择文件的文件名
+                    final String filePath = chooser.getCurrentDirectory().toString()
                             + File.separator + fileName; // 选择文件的文件路径
-
-                    logger.debug(fileName);
-                    logger.debug(filePath);
-                    // 读出文件内容
-//                    try {
-////                        PrintWriter writer = new PrintWriter(new BufferedWriter(
-////                                new FileWriter(filePath))); // newһ��PrintWriter����
-////
-////                        writer.write(mTextArea.getText()); // ���ı�����д���ļ�
-////                        writer.close(); // �ر������
-//                        chooser.cancelSelection(); // 选择取消
-//                    } catch (IOException e) {
-//                        logger.error("Exception in choosing files.");
-//                    }
-
+                    // 开启线程在out文件夹下面创建一个同样的文件,并去掉包名
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String outFilePath = ajcCompiler.getOutFilePath();
+                            // 1.首先复制一份文件到项目out目录下面
+                            FileUtil.copyFile(filePath, outFilePath + "/" + fileName, true);
+                            // 2.接着替换包名的那一行
+                            FileUtil.removePackageName(outFilePath + "/" + fileName);
+                            // 3.最后替换与aj编译的文件的内容
+                            String content = outFilePath + "/TraceApp.aj\n" + outFilePath + "/" + fileName;
+                            FileUtil.writeToFile(ajcCompiler.getOutFilePath() + "/sources.lst", content);
+                        }
+                    }).run();
                 } else if (rVal == JFileChooser.CANCEL_OPTION) {
                     logger.info("Cancel choose file...");
                 }
@@ -86,7 +90,7 @@ public class MainForm extends Component {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("MainForm");
+        JFrame frame = new JFrame("子程序调用序列匹配");
         frame.setContentPane(new MainForm().mainJPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

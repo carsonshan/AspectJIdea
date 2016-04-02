@@ -1,4 +1,4 @@
-package aspectj.trace.core.javac;
+package aspectj.trace.core.compiler;
 
 import javax.tools.JavaCompiler;
 import javax.tools.StandardJavaFileManager;
@@ -6,7 +6,6 @@ import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;

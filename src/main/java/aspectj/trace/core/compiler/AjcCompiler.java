@@ -1,4 +1,4 @@
-package aspectj.trace.core.app;
+package aspectj.trace.core.compiler;
 
 import org.apache.log4j.Logger;
 import org.aspectj.bridge.MessageHandler;
@@ -11,7 +11,7 @@ import java.util.Properties;
 /**
  * AjcCompiler
  * 使用aspectj自带的编译ajc来执行代码
- * 本程序仅作为测试程序使用
+ * 本程序仅作为界面程序调用结果使用
  * <p/>
  * Author: Noprom <tyee.noprom@qq.com>
  * Date: 4/1/16 3:41 PM.
@@ -77,9 +77,8 @@ public class AjcCompiler {
         File projectPath = new File(targetPath.getParent());
 
         classPathDir = classPath.getAbsolutePath();
-        sourceFilePath = classPath.getAbsolutePath() + "/sources.lst";
-        logger.debug(sourceFilePath);
         outFilePath = projectPath.getAbsolutePath() + "/out";
+        sourceFilePath = outFilePath + "/sources.lst";
         destinationPath = outFilePath;
         ideaPath = loadProperty("idea.jar.path");
     }
@@ -110,7 +109,7 @@ public class AjcCompiler {
         String execStr = JAVA_PATH + " -cp " + CLASSPATH + " " + className;
         // 去除idea的编译部分
         execStr = execStr.replace(":" + ideaPath, "");
-        logger.debug(execStr);
+        //logger.debug(execStr);
         Process ps = Runtime.getRuntime().exec(execStr);
         // 得到执行的结果
         String resultStr = loadStream(ps.getInputStream());

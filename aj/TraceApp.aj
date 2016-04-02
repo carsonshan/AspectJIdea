@@ -1,7 +1,6 @@
 package aspectj.trace.core.aspectj;
 
-
-import aspectj.trace.core.app.AjcCompiler;
+import aspectj.trace.core.compiler.AjcCompiler;
 import org.apache.log4j.Logger;
 
 import java.io.*;
