@@ -236,6 +236,28 @@ public class FileUtil {
         return true;
     }
 
+    /**
+     * 获取文件内容
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getFileContent(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            String tempString = null;
+            while ((tempString = reader.readLine()) != null) {
+                builder.append(tempString);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return builder.toString();
+    }
+
     public static void main(String[] args) {
         AjcCompiler ajcCompiler = new AjcCompiler();
         FileUtil.removePackageName(ajcCompiler.getOutFilePath() + "/App.java");

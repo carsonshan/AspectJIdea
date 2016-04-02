@@ -101,7 +101,7 @@ public class AjcCompiler {
      * @param fileName  保存结果的文件名
      * @param className 执行文件的类名
      */
-    public void run(String fileName, String className) throws Exception {
+    public String run(String fileName, String className) throws Exception {
         // 调用命令行来执行程序
         String JAVA_HOME = System.getenv("JAVA_HOME");
         String JAVA_PATH = JAVA_HOME + "/bin/java";
@@ -114,8 +114,8 @@ public class AjcCompiler {
         // 得到执行的结果
         String resultStr = loadStream(ps.getInputStream());
         String errorStr = loadStream(ps.getErrorStream());
-        logger.debug(resultStr);
-        logger.error(errorStr);
+        //logger.debug(resultStr);
+        //logger.error(errorStr);
         // 写入文件
         File file = new File(fileName);
         if (!file.exists()) {
@@ -126,6 +126,7 @@ public class AjcCompiler {
         writer.close();
 //        ps.wait();
 //        ps.destroy();
+        return resultStr;
     }
 
     /**
