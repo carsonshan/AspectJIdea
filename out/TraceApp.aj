@@ -70,12 +70,12 @@ public aspect TraceApp {
 
             if (!_Stack.empty()) {
                 //System.out.println(_Stack.peek() + " --> " + signature);
-                System.out.println(_Stack.peek() + " --> " + name);
+                System.out.println(_Stack.peek() + " --> " + name + " " + thisJoinPoint.getStaticPart().getSourceLocation().toString());
 
                 //写入文件
                 try {
                     //_OS.write((_Stack.peek() + " --> " + signature + "\n").getBytes());
-                    _OS.write((_Stack.peek() + " --> " + name + "\n").getBytes());
+                    _OS.write((_Stack.peek() + " --> " + name + " " + thisJoinPoint.getStaticPart().getSourceLocation().toString() + "\n").getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -122,7 +122,7 @@ public aspect TraceApp {
 
 
     before(): call(* java.io.PrintStream.println(..)) && within(TraceApp+) {
-        for (int i = 0, spaces = _indentationLevel*4 ; i < spaces; ++i) {
+        for (int i = 0, spaces = _indentationLevel * 4; i < spaces; ++i) {
             System.out.print(" ");
             //写入文件
             try {
