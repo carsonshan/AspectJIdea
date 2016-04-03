@@ -2,6 +2,8 @@ package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
 import aspectj.trace.util.FileUtil;
+import aspectj.trace.util.Pair;
+import aspectj.trace.util.TreeUtil;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -10,6 +12,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * 程序主界面
@@ -29,14 +33,19 @@ public class MainForm extends Component {
     private JTextArea matchTextArea;            // 匹配区内容
     private JTextArea inputTextArea;            // 输入匹配区内容
     private JLabel fileNamesLabel;
+    private JButton searchButton;
     private AjcCompiler ajcCompiler;            // Ajc编译器
     private String className;                   // 被编译的文件的类名
+
+    private String outFileContent = "";                      //编译输出结果
 
     public MainForm() {
         // 初始化控件的显示
         inputTextArea.setMargin(new Insets(10, 10, 10, 10));
         matchTextArea.setMargin(new Insets(10, 10, 10, 10));
+        matchTextArea.setEnabled(false);
         rawOutputTextArea.setMargin(new Insets(10, 10, 10, 10));
+        rawOutputTextArea.setEnabled(false);
         inputTextArea.setPreferredSize(new Dimension(1000, 800));
         leftPanel.setPreferredSize(new Dimension(1000, 800));
         rightPanel.setPreferredSize(new Dimension(1000, 800));
@@ -48,6 +57,9 @@ public class MainForm extends Component {
         fileChooseBtn.addActionListener(new FileChooseListener());
         // 编译按钮点击事件
         compileBtn.addActionListener(new ComplierListener());
+        // 查询按钮点击事件
+        searchButton.addActionListener(new SearchListener());
+
     }
 
     /**
@@ -115,14 +127,71 @@ public class MainForm extends Component {
                         // ajc编译生成class文件
                         ajcCompiler.compile();
                         // 运行class文件并得到运行结果
-                        String outFileContent = ajcCompiler.run(outFile, className);
+                        outFileContent = ajcCompiler.run(outFile, className);
                         // 设置最右侧输出框的内容
+                        rawOutputTextArea.setText("");
                         rawOutputTextArea.append(outFileContent);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
                 }
             }).run();
+        }
+    }
+
+    /**
+     * 查询按钮点击事件
+     */
+    private class SearchListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            matchTextArea.setText("");
+
+            String[] outLines = outFileContent.split("\n");
+            TreeUtil callTree = new TreeUtil();
+            for (String r : outLines) {
+                String[] words = r.split("\\s+");
+                for(int i=1;i<words.length-1;++i){
+                    if(words[i].equals("-->")){
+                        callTree.addRunTime(words[i-1], words[i+1],words[i+2]);
+                        break;
+                    }
+                }
+            }
+
+            String[] lines = inputTextArea.getText().split("\n");
+            int linenum = 1;
+            StringBuilder finalShow = new StringBuilder("");
+            for (String r : lines) {
+                String[] com_t = r.split("(-->)|(\\s+)");
+                List<String> com = new ArrayList<String>();
+                for(String k:com_t){
+                    if(!k.equals("")){
+                        com.add(k);
+                    }
+                }
+
+                if (com.size() != 2) {
+                    matchTextArea.append("wrong input line:" + r +"\n");
+                } else {
+                    List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPaths(com.get(0), com.get(1));
+                    for (List<Pair<String, Pair<String, String>>> c : result) {
+                        int indent = 0;
+                        StringBuilder toshow = new StringBuilder();
+                        for (Pair<String, Pair<String, String>> t : c) {
+                            toshow.append(linenum + ":");
+                            for (int i = 0; i < indent; ++i) {
+                                toshow.append("    ");
+                            }
+                            toshow.append(t.second.first + " --> " + t.second.second + "    " + t.first + "\n");
+                            indent++;
+                            linenum++;
+                        }
+                        finalShow.append(toshow);
+                    }
+                }
+            }
+            matchTextArea.append(finalShow.toString());
         }
     }
 
