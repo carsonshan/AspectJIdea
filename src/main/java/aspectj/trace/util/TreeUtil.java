@@ -27,6 +27,7 @@ public class TreeUtil {
             root = new NodeUtil(srcFunction,null,"str");
             now = root;
         }
+
         return runNext(srcFunction, dstFunction, callLocation);
     }
 
@@ -50,13 +51,15 @@ public class TreeUtil {
      * @return
      */
     private NodeUtil runNext(String srcFunction, String dstFunction, String callLocation){
-        while(now!=root){
+        while(now.getParentNode()!=null){
             if(!now.getName().equals(srcFunction)){
                 now = now.getParentNode();
             }
+            else{
+                break;
+            }
         }
-        NodeUtil childNode = new NodeUtil(srcFunction,now,callLocation);
-        now.addChild(childNode);
+        NodeUtil childNode = new NodeUtil(dstFunction,now,callLocation);
         now = childNode;
         return now;
     }
@@ -149,6 +152,7 @@ public class TreeUtil {
             path_r.clear();
         }
         else {
+            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(),new Pair<String, String>(parent.getName(),now_t.getName())));
             Collections.reverse(path_r);
         }
         return path_r;
