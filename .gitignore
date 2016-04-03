@@ -4,6 +4,6 @@
 *.txt
 *.iml
 target
-out
+out/*.java
 src/main/resources/sysconfig.properties
 src/main/resources/sources.lst
