@@ -43,7 +43,9 @@ public class MainForm extends Component {
         // 初始化控件的显示
         inputTextArea.setMargin(new Insets(10, 10, 10, 10));
         matchTextArea.setMargin(new Insets(10, 10, 10, 10));
+        matchTextArea.setEnabled(false);
         rawOutputTextArea.setMargin(new Insets(10, 10, 10, 10));
+        rawOutputTextArea.setEnabled(false);
         inputTextArea.setPreferredSize(new Dimension(1000, 800));
         leftPanel.setPreferredSize(new Dimension(1000, 800));
         rightPanel.setPreferredSize(new Dimension(1000, 800));
