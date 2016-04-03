@@ -106,7 +106,7 @@ public class AjcCompiler {
         String JAVA_HOME = System.getenv("JAVA_HOME");
         String JAVA_PATH = JAVA_HOME + "/bin/java";
         String CLASSPATH = ".:" + destinationPath + ":" + System.getProperty("java.class.path");
-        String execStr = JAVA_PATH + " -cp " + CLASSPATH + " " + className;
+        String execStr = "java" + " -cp " + CLASSPATH + " " + className;
         // 去除idea的编译部分
         execStr = execStr.replace(":" + ideaPath, "");
         //logger.debug(execStr);
