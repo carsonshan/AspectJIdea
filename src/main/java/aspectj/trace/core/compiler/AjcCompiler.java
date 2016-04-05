@@ -109,12 +109,12 @@ public class AjcCompiler {
         String execStr = "java" + " -cp " + CLASSPATH + " " + className;
         // 去除idea的编译部分
         execStr = execStr.replace(":" + ideaPath, "");
-        //logger.debug(execStr);
+        logger.debug(execStr);
         Process ps = Runtime.getRuntime().exec(execStr);
         // 得到执行的结果
         String resultStr = loadStream(ps.getInputStream());
         String errorStr = loadStream(ps.getErrorStream());
-        //logger.debug(resultStr);
+        logger.debug(resultStr);
         //logger.error(errorStr);
         // 写入文件
         File file = new File(fileName);
