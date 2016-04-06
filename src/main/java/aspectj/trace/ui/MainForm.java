@@ -147,13 +147,14 @@ public class MainForm extends Component {
         public void actionPerformed(ActionEvent actionEvent) {
             matchTextArea.setText("");
 
+            /*生成调用关系树*/
             String[] outLines = outFileContent.split("\n");
             TreeUtil callTree = new TreeUtil();
             for (String r : outLines) {
                 String[] words = r.split("\\s+");
-                for(int i=1;i<words.length-1;++i){
-                    if(words[i].equals("-->")){
-                        callTree.addRunTime(words[i-1], words[i+1],words[i+2]);
+                for (int i = 1; i < words.length - 1; ++i) {
+                    if (words[i].equals("-->")) {
+                        callTree.addRunTime(words[i - 1], words[i + 1], words[i + 2]);
                         break;
                     }
                 }
@@ -162,19 +163,41 @@ public class MainForm extends Component {
             String[] lines = inputTextArea.getText().split("\n");
             int linenum = 1;
             StringBuilder finalShow = new StringBuilder("");
+
+            /*对每行查询指令进行查询*/
             for (String r : lines) {
-                String[] com_t = r.split("(-->)|(\\s+)");
-                List<String> com = new ArrayList<String>();
-                for(String k:com_t){
-                    if(!k.equals("")){
-                        com.add(k);
+                String[] com_t = r.split("\\s+");
+                LinkedList<String> com = new LinkedList<String>();
+                for (String k : com_t) {
+                    if (!k.equals("")) {
+                        com.push(k);
                     }
                 }
 
-                if (com.size() != 2) {
-                    matchTextArea.append("wrong input line:" + r +"\n");
+                int comSize = com.size();
+                boolean checkInput = true;
+                for (int i = 1; i < comSize; i += 2) {
+                    if (!com.get(i).equals("-->")) {
+                        checkInput = false;
+                        break;
+                    }
+                }
+
+                if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
+                    finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
+                    linenum++;
                 } else {
-                    List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPaths(com.get(0), com.get(1));
+                    /*掐头去尾*/
+                    String src = com.removeFirst();
+                    String dst = com.removeLast();
+                    com.removeFirst();
+                    if (!com.isEmpty()) {
+                        com.removeLast();
+                    }
+
+                    /*查询结果存入字符串*/
+                    String[] paths = com.toArray(new String[0]);
+                    List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPathMultiNode(src, dst, paths);
                     for (List<Pair<String, Pair<String, String>>> c : result) {
                         int indent = 0;
                         StringBuilder toshow = new StringBuilder();
