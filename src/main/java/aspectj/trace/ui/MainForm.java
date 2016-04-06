@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.Style;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -110,7 +111,7 @@ public class MainForm extends Component {
             }
         }
     }
-
+    //
     /**
      * 编译按钮点击事件
      */
@@ -143,6 +144,7 @@ public class MainForm extends Component {
      * 查询按钮点击事件
      */
     private class SearchListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             matchTextArea.setText("");
@@ -167,36 +169,36 @@ public class MainForm extends Component {
             /*对每行查询指令进行查询*/
             for (String r : lines) {
                 String[] com_t = r.split("\\s+");
-                LinkedList<String> com = new LinkedList<String>();
+                List<String> com = new ArrayList<String>();
                 for (String k : com_t) {
                     if (!k.equals("")) {
-                        com.push(k);
+                        com.add(k);
                     }
                 }
-
+                //A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9 --> A10
                 int comSize = com.size();
                 boolean checkInput = true;
-                for (int i = 1; i < comSize; i += 2) {
-                    if (!com.get(i).equals("-->")) {
+                int comIndex = 0;
+                LinkedList<String> functions = new LinkedList<String>();
+                for (;comIndex + 1 < comSize; comIndex += 2) {
+                    if (!com.get(comIndex +1).equals("-->")) {
                         checkInput = false;
                         break;
                     }
+                    functions.add(com.get(comIndex));
                 }
 
                 if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
                     finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
                     linenum++;
                 } else {
+                    /*添加最后的目标函数*/
+                    functions.add(com.get(comSize-1));
                     /*掐头去尾*/
-                    String src = com.removeFirst();
-                    String dst = com.removeLast();
-                    com.removeFirst();
-                    if (!com.isEmpty()) {
-                        com.removeLast();
-                    }
-
+                    String src = functions.removeFirst();
+                    String dst = functions.removeLast();
                     /*查询结果存入字符串*/
-                    String[] paths = com.toArray(new String[0]);
+                    String[] paths = functions.toArray(new String[functions.size()]);
                     List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPathMultiNode(src, dst, paths);
                     for (List<Pair<String, Pair<String, String>>> c : result) {
                         int indent = 0;
