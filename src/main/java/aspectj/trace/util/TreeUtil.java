@@ -32,13 +32,42 @@ public class TreeUtil {
     }
 
     /**
+     * 获取从起始函数到目标函数且按顺序经过所有中间函数的所有调用路径
+     *
+     * @param srcFunction
+     * @param dstFunction
+     * @param path
+     * @return
+     */
+    public List<List<Pair<String, Pair<String, String>>>> getCallPathMultiNode(String srcFunction, String dstFunction ,String[] path){
+        List<List<Pair<String, Pair<String, String>>>> allPath = getCallPathsStrTODst(srcFunction, dstFunction);
+        List<List<Pair<String, Pair<String, String>>>> fitPath = new ArrayList<List<Pair<String, Pair<String, String>>>>();
+        for(List<Pair<String, Pair<String, String>>> r: allPath){
+            int pathIndex = 0;
+            int rSize_NL = r.size() - 1;
+            for(int rIndex = 0;rIndex<rSize_NL;rIndex++){
+                if(pathIndex == path.length){
+                    break;
+                }
+                if (r.get(rIndex).second.second.equals(path[pathIndex])){
+                    pathIndex++;
+                }
+            }
+            if(pathIndex == path.length){
+                fitPath.add(r);
+            }
+        }
+        return fitPath;
+    }
+
+    /**
      * 获取从起始函数到目标函数的所有调用路径
      *
      * @param srcFunction
      * @param dstFunction
      * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
      */
-    public List<List<Pair<String, Pair<String, String>>>> getCallPaths(String srcFunction, String dstFunction) {
+    public List<List<Pair<String, Pair<String, String>>>> getCallPathsStrTODst(String srcFunction, String dstFunction) {
         return findPaths(root, srcFunction, dstFunction);
     }
 
