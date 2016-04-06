@@ -23,8 +23,8 @@ public class TreeUtil {
      * @return
      */
     public NodeUtil addRunTime(String srcFunction, String dstFunction, String callLocation) {
-        if(root == null){
-            root = new NodeUtil(srcFunction,null,"str");
+        if (root == null) {
+            root = new NodeUtil(srcFunction, null, "str");
             now = root;
         }
 
@@ -38,7 +38,7 @@ public class TreeUtil {
      * @param dstFunction
      * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
      */
-    public List<List<Pair<String,Pair<String,String>>>> getCallPaths( String srcFunction, String dstFunction){
+    public List<List<Pair<String, Pair<String, String>>>> getCallPaths(String srcFunction, String dstFunction) {
         return findPaths(root, srcFunction, dstFunction);
     }
 
@@ -50,16 +50,15 @@ public class TreeUtil {
      * @param callLocation
      * @return
      */
-    private NodeUtil runNext(String srcFunction, String dstFunction, String callLocation){
-        while(now.getParentNode()!=null){
-            if(!now.getName().equals(srcFunction)){
+    private NodeUtil runNext(String srcFunction, String dstFunction, String callLocation) {
+        while (now.getParentNode() != null) {
+            if (!now.getName().equals(srcFunction)) {
                 now = now.getParentNode();
-            }
-            else{
+            } else {
                 break;
             }
         }
-        NodeUtil childNode = new NodeUtil(dstFunction,now,callLocation);
+        NodeUtil childNode = new NodeUtil(dstFunction, now, callLocation);
         now = childNode;
         return now;
     }
@@ -72,19 +71,17 @@ public class TreeUtil {
      * @param dstFunction
      * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
      */
-    private List<List<Pair<String,Pair<String,String>>>> findPaths(NodeUtil strNode, String srcFunction, String dstFunction){
-        List<List<Pair<String,Pair<String,String>>>> paths = new ArrayList<List<Pair<String, Pair<String, String>>>>();
-        if(strNode == null){
+    private List<List<Pair<String, Pair<String, String>>>> findPaths(NodeUtil strNode, String srcFunction, String dstFunction) {
+        List<List<Pair<String, Pair<String, String>>>> paths = new ArrayList<List<Pair<String, Pair<String, String>>>>();
+        if (strNode == null) {
             return paths;
         }
 
-        if(strNode.getName().equals(srcFunction)){
-            paths.addAll(findToDest(strNode,dstFunction));
+        if (strNode.getName().equals(srcFunction)) {
+            paths.addAll(findToDest(strNode, dstFunction));
         }
-        else{
-            for(NodeUtil r:strNode.getChildNodes()){
-                paths.addAll(findPaths(r,srcFunction,dstFunction));
-            }
+        for (NodeUtil r : strNode.getChildNodes()) {
+            paths.addAll(findPaths(r, srcFunction, dstFunction));
         }
         return paths;
     }
@@ -96,13 +93,13 @@ public class TreeUtil {
      * @param dstFunction
      * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
      */
-    private List<List<Pair<String,Pair<String,String>>>> findToDest(NodeUtil strNode ,String dstFunction){
-        List<List<Pair<String,Pair<String,String>>>> paths = new ArrayList<List<Pair<String, Pair<String, String>>>>();
-        if(strNode == null){
+    private List<List<Pair<String, Pair<String, String>>>> findToDest(NodeUtil strNode, String dstFunction) {
+        List<List<Pair<String, Pair<String, String>>>> paths = new ArrayList<List<Pair<String, Pair<String, String>>>>();
+        if (strNode == null) {
             return paths;
         }
-        List<NodeUtil> dests = findDest(strNode,dstFunction);
-        for(NodeUtil r:dests){
+        List<NodeUtil> dests = findDest(strNode, dstFunction);
+        for (NodeUtil r : dests) {
             paths.add(getOnePath(strNode, r));
         }
         return paths;
@@ -115,16 +112,16 @@ public class TreeUtil {
      * @param dstFunction
      * @return
      */
-    private List<NodeUtil> findDest(NodeUtil strNode ,String dstFunction){
+    private List<NodeUtil> findDest(NodeUtil strNode, String dstFunction) {
         List<NodeUtil> dests = new ArrayList<NodeUtil>();
-        if(strNode == null){
+        if (strNode == null) {
             return dests;
         }
-        for(NodeUtil r:strNode.getChildNodes()){
-            if(r.getName().equals(dstFunction)){
+        for (NodeUtil r : strNode.getChildNodes()) {
+            if (r.getName().equals(dstFunction)) {
                 dests.add(r);
             }
-            dests.addAll(findDest(r,dstFunction));
+            dests.addAll(findDest(r, dstFunction));
         }
         return dests;
     }
@@ -136,23 +133,22 @@ public class TreeUtil {
      * @param dest
      * @return List<Pair<调用行,Pair<调用者,被调用者>>>
      */
-    private List<Pair<String,Pair<String,String>>> getOnePath(NodeUtil str, NodeUtil dest){
-        List<Pair<String,Pair<String,String>>> path_r = new ArrayList<Pair<String, Pair<String, String>>>();
-        if(dest == null){
+    private List<Pair<String, Pair<String, String>>> getOnePath(NodeUtil str, NodeUtil dest) {
+        List<Pair<String, Pair<String, String>>> path_r = new ArrayList<Pair<String, Pair<String, String>>>();
+        if (dest == null) {
             return path_r;
         }
         NodeUtil now_t = dest;
         NodeUtil parent = dest.getParentNode();
-        while(parent!=null&& !parent.getName().equals(str.getName())){
-            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(),new Pair<String, String>(parent.getName(),now_t.getName())));
+        while (parent != null && !(parent == str)) {
+            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(), new Pair<String, String>(parent.getName(), now_t.getName())));
             now_t = parent;
             parent = now_t.getParentNode();
         }
-        if(parent==null){
+        if (parent == null) {
             path_r.clear();
-        }
-        else {
-            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(),new Pair<String, String>(parent.getName(),now_t.getName())));
+        } else {
+            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(), new Pair<String, String>(parent.getName(), now_t.getName())));
             Collections.reverse(path_r);
         }
         return path_r;
