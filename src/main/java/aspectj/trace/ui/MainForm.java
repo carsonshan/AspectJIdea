@@ -46,7 +46,7 @@ public class MainForm extends Component {
         matchTextArea.setMargin(new Insets(10, 10, 10, 10));
         matchTextArea.setEnabled(false);
         rawOutputTextArea.setMargin(new Insets(10, 10, 10, 10));
-        rawOutputTextArea.setEnabled(false);
+        //rawOutputTextArea.setEnabled(false);
         inputTextArea.setPreferredSize(new Dimension(1000, 800));
         leftPanel.setPreferredSize(new Dimension(1000, 800));
         rightPanel.setPreferredSize(new Dimension(1000, 800));
@@ -111,7 +111,7 @@ public class MainForm extends Component {
             }
         }
     }
-    //
+
     /**
      * 编译按钮点击事件
      */
