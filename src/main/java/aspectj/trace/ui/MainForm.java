@@ -41,15 +41,24 @@ public class MainForm extends Component {
     private String outFileContent = "";                      //编译输出结果
 
     public MainForm() {
+
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();// 获取显示器大小对象
+        Dimension frame = this.getSize();      //获取窗口大小
+
         // 初始化控件的显示
         inputTextArea.setMargin(new Insets(10, 10, 10, 10));
+        //inputTextArea.setPreferredSize(new Dimension(300, 200));
+
         matchTextArea.setMargin(new Insets(10, 10, 10, 10));
-        matchTextArea.setEnabled(false);
-        rawOutputTextArea.setMargin(new Insets(10, 10, 10, 10));
+        //matchTextArea.setPreferredSize(new Dimension(300, 300));
+
+        //matchTextArea.setEnabled(false);
         //rawOutputTextArea.setEnabled(false);
-        inputTextArea.setPreferredSize(new Dimension(1000, 800));
-        leftPanel.setPreferredSize(new Dimension(1000, 800));
-        rightPanel.setPreferredSize(new Dimension(1000, 800));
+        rawOutputTextArea.setMargin(new Insets(10, 10, 10, 10));
+        //rawOutputTextArea.setPreferredSize(new Dimension(600, 500));
+
+        leftPanel.setPreferredSize(new Dimension(460, 800));
+        rightPanel.setPreferredSize(new Dimension(795, 800));
 
         // 初始化ajc编译器
         ajcCompiler = new AjcCompiler();
@@ -180,8 +189,8 @@ public class MainForm extends Component {
                 boolean checkInput = true;
                 int comIndex = 0;
                 LinkedList<String> functions = new LinkedList<String>();
-                for (;comIndex + 1 < comSize; comIndex += 2) {
-                    if (!com.get(comIndex +1).equals("-->")) {
+                for (; comIndex + 1 < comSize; comIndex += 2) {
+                    if (!com.get(comIndex + 1).equals("-->")) {
                         checkInput = false;
                         break;
                     }
@@ -193,7 +202,7 @@ public class MainForm extends Component {
                     linenum++;
                 } else {
                     /*添加最后的目标函数*/
-                    functions.add(com.get(comSize-1));
+                    functions.add(com.get(comSize - 1));
                     /*掐头去尾*/
                     String src = functions.removeFirst();
                     String dst = functions.removeLast();
@@ -224,6 +233,8 @@ public class MainForm extends Component {
         JFrame frame = new JFrame("子程序调用序列匹配");
         frame.setContentPane(new MainForm().mainJPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);//最大化窗体
+        frame.setLocationRelativeTo(null);//窗体居中
         frame.pack();
         frame.setVisible(true);
     }
