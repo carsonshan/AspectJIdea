@@ -137,7 +137,13 @@ public class MainForm extends Component {
                         // ajc编译生成class文件
                         ajcCompiler.compile();
                         // 运行class文件并得到运行结果
-                        outFileContent = ajcCompiler.run(outFile, className);
+//                        outFileContent = ajcCompiler.run(outFile, className);
+                        ajcCompiler.run(outFile, className);
+
+                        InputStream _Is = new FileInputStream("outaj.txt");
+                        byte[] result = new byte[_Is.available()];
+                        _Is.read(result);
+                        outFileContent = new String(result);
                         // 设置最右侧输出框的内容
                         rawOutputTextArea.setText("");
                         rawOutputTextArea.append(outFileContent);
