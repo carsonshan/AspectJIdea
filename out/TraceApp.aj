@@ -39,7 +39,7 @@ public aspect TraceApp {
         File docPath = new File(targetPath.getParent());
         this.docPath = docPath.getAbsolutePath() + "/doc";
         //this._SavePath = docPath + "/out.txt";
-        this._SavePath = "out.txt";
+        this._SavePath = "outaj.txt";
 
         //程序入口，一般为main
         _Stack.push("main");
