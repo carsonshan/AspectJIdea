@@ -13,18 +13,20 @@ public class NodeUtil {
     private NodeUtil parentNode;
     private List<NodeUtil> childNodes;
     private String name;
+    private int runLineNum;
 
-    public NodeUtil(String name, NodeUtil parentNode, String callLocation){
+    public NodeUtil(String name, NodeUtil parentNode, String callLocation, int runLineNum) {
         this.name = name;
         this.parentNode = parentNode;
         this.callLocation = callLocation;
+        this.runLineNum = runLineNum;
         this.childNodes = new ArrayList<NodeUtil>();
-        if(parentNode!=null){
+        if (parentNode != null) {
             parentNode.addChild(this);
         }
     }
 
-    public void addChild(NodeUtil child){
+    public void addChild(NodeUtil child) {
         childNodes.add(child);
     }
 
@@ -42,5 +44,9 @@ public class NodeUtil {
 
     public String getCallLocation() {
         return callLocation;
+    }
+
+    public int getRunLineNum() {
+        return runLineNum;
     }
 }
