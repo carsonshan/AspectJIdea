@@ -31,6 +31,7 @@ public aspect TraceApp {
      * 标准文件输出流
      */
     private OutputStream _OS;
+    private OutputStream dotOS;
 
     TraceApp() {
         // 初始化文件的路径
@@ -46,6 +47,7 @@ public aspect TraceApp {
         //创建输出流
         try {
             _OS = new FileOutputStream(_SavePath);
+            dotOS = new FileOutputStream("out_dot.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -76,6 +78,7 @@ public aspect TraceApp {
                 try {
                     //_OS.write((_Stack.peek() + " --> " + signature + "\n").getBytes());
                     _OS.write((_Stack.peek() + " --> " + name + " " + thisJoinPoint.getStaticPart().getSourceLocation().toString() + "\n").getBytes());
+                    dotOS.write((_Stack.peek() + " -> " + name + "\n").getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

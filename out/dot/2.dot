@@ -1,0 +1,19 @@
+digraph G {
+    /*初始化节点和边的颜色*/
+    node [peripheries=2 style=filled color="#eecc80"]
+    edge [color="sienna" fontcolor="green"]
+    /*节点之间的调用关系*/
+    main -> parse -> execute;
+    main -> init [arrowhead = box];
+    main -> cleanupi -> main;
+    make_string[label = once shape=parallelogram style=filled ]
+    execute -> make_string[label=go style=dashed arrowtail=diamond];
+    execute -> printf [shape=box];
+    init -> make_string;
+    main -> printf[dir=none];
+    execute -> compare[dir=both];
+    /*下面纯粹是实验*/
+    A -> B[color=red];
+    B -> C[color=green];
+
+}

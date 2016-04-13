@@ -114,16 +114,17 @@ public class AjcCompiler {
         // 得到执行的结果
         String resultStr = loadStream(ps.getInputStream());
         String errorStr = loadStream(ps.getErrorStream());
-        logger.debug(resultStr);
+        //logger.debug(resultStr);
         //logger.error(errorStr);
         // 写入文件
-        File file = new File(fileName);
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileWriter writer = new FileWriter(file);
-        writer.write(resultStr);
-        writer.close();
+        // 这里通过命令行获取到的会截取println的输出,因此注释掉
+//        File file = new File(fileName);
+//        if (!file.exists()) {
+//            file.createNewFile();
+//        }
+//        FileWriter writer = new FileWriter(file);
+//        writer.write(resultStr);
+//        writer.close();
 //        ps.wait();
 //        ps.destroy();
         return resultStr;

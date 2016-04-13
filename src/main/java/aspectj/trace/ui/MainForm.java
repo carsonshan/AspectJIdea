@@ -140,6 +140,14 @@ public class MainForm extends Component {
 //                        outFileContent = ajcCompiler.run(outFile, className);
                         ajcCompiler.run(outFile, className);
 
+                        File outFile = new File("outaj.txt");
+                        if (!outFile.exists()) {
+                            outFile.createNewFile();
+                        }
+                        outFile = new File("out_dot.txt");
+                        if (!outFile.exists()) {
+                            outFile.createNewFile();
+                        }
                         InputStream _Is = new FileInputStream("outaj.txt");
                         byte[] result = new byte[_Is.available()];
                         _Is.read(result);
