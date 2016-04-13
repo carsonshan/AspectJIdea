@@ -159,11 +159,11 @@ public class MainForm extends Component {
                         rawOutputTextArea.setText("");
                         rawOutputTextArea.append(outFileContent);
 
-                        // 绘图
+                        // 绘制原始图形
                         String dotName = ajcCompiler.getOutFilePath() + "/dot/ori.dot";
-                        String outName = ajcCompiler.getOutFilePath() + "/dot/ori.png";
+                        String destFileName = ajcCompiler.getOutFilePath() + "/dot/ori.png";
                         dotUtil.generateDotCode(dotName);
-                        dotUtil.plotDot(dotName, outName);
+                        dotUtil.plotDot(dotName, destFileName);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
