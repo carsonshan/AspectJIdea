@@ -72,9 +72,9 @@ public class DotUtil {
     public static void main(String[] args) {
         DotUtil dotUtil = new DotUtil();
         FileUtil fileUtil = new FileUtil();
-        String dotName = fileUtil.getOutFilePath() + "/dot/ori.dot";
-        String outName = fileUtil.getOutFilePath() + "/dot/ori.png";
-        dotUtil.generateDotCode(dotName);
+        String dotName = fileUtil.getOutFilePath() + "/dot/match.dot";
+        String outName = fileUtil.getOutFilePath() + "/dot/match.png";
+        //dotUtil.generateDotCode(dotName);
         dotUtil.plotDot(dotName, outName);
     }
 }

@@ -3,8 +3,8 @@ digraph G {
     node [peripheries=2 style=filled color="#eecc80"]
     edge [color="sienna" fontcolor="green"]
 main -> A1;
-A1 -> A2;
-A2 -> A3;
+A1 -> A2[color=red];
+A2 -> A3[color=red];
 A3 -> A4;
 A4 -> A5;
 A5 -> A6;
@@ -87,5 +87,7 @@ C9 -> C10;
 C9 -> C10;
 A1 -> C8;
 C8 -> C10;
-
+A1[color=red];
+A2[color=red];
+A3[color=red];
 }
