@@ -49,4 +49,9 @@ public class NodeUtil {
     public int getRunLineNum() {
         return runLineNum;
     }
+
+    @Override
+    public boolean equals(Object o){
+        return this == o;
+    }
 }

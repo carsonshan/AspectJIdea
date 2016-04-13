@@ -32,29 +32,45 @@ public class TreeUtil {
     }
 
 
-    public List<List<NodeUtil>> test(List<SearchInfoUtil> searchOrder) {
-        List<List<NodeUtil>> searchResult = new ArrayList<List<NodeUtil>>();
+    /**
+     * @param searchOrder
+     * @return 外层list：不同行查询；第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+     */
+    public List<List<List<List<NodeUtil>>>> getCallPathOrdered(List<SearchInfoUtil> searchOrder) {
+        List<List<List<List<NodeUtil>>>> searchResult = new ArrayList<List<List<List<NodeUtil>>>>();
         for (SearchInfoUtil r : searchOrder) {
-            List<List<NodeUtil>> result = getPathFuzzyAndClearly(r);
+            List<List<List<NodeUtil>>> result = getPathFuzzyAndClearly(r);
             if (result == null || result.isEmpty()) {
                 continue;
             }
-            searchResult.addAll(result);
+            searchResult.add(result);
         }
         return searchResult;
     }
 
-//    public List<Pair<NodeUtil, List<List<NodeUtil>>>> getCallPathOrdered(List<SearchInfoUtil> searchOrder) {
-//        List<List<NodeUtil>> searchResult = new ArrayList<List<NodeUtil>>();
-//        for (SearchInfoUtil r : searchOrder) {
-//            List<List<NodeUtil>> result = getPathFuzzyAndClearly(r);
-//            if (result == null || !result.isEmpty()) {
-//                searchResult.clear();
-//                return null;
-//            }
-//        }
-//        //// TODO: 4/13/16
-//    }
+    /**
+     * 获取一个
+     *
+     * @param searchOrder
+     * @return
+     */
+    public Set<Pair<NodeUtil, List<NodeUtil>>> getCallPathTreeOrdered(List<SearchInfoUtil> searchOrder) {
+        Set<Pair<NodeUtil, List<NodeUtil>>> result = new HashSet<Pair<NodeUtil, List<NodeUtil>>>();
+        //外层list：不同行查询；第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+        List<List<List<List<NodeUtil>>>> searchResult = getCallPathOrdered(searchOrder);
+        if (searchResult == null || searchResult.isEmpty()) {
+            return result;
+        }
+        List<List<Pair<Pair<NodeUtil, NodeUtil>, List<NodeUtil>>>> toSearch =
+                new ArrayList<List<Pair<Pair<NodeUtil, NodeUtil>, List<NodeUtil>>>>();
+        for (List<List<List<NodeUtil>>> r : searchResult) {
+            List<Pair<Pair<NodeUtil, NodeUtil>, List<NodeUtil>>> tmp = new ArrayList<Pair<Pair<NodeUtil, NodeUtil>, List<NodeUtil>>>();
+            for (List<List<NodeUtil>> c : r) {
+                tmp
+            }
+        }
+
+    }
 
     /**
      * 获取从起始函数到目标函数且按顺序经过所有中间函数的所有调用路径
@@ -210,17 +226,25 @@ public class TreeUtil {
         return path_r;
     }
 
-    private List<List<NodeUtil>> getPathFuzzyAndClearly(SearchInfoUtil searchInfo) {
+    /**
+     * 根据待查询信息（起始节点名和经过函数）查询合适路径
+     *
+     * @param searchInfo
+     * @return 外层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+     */
+    private List<List<List<NodeUtil>>> getPathFuzzyAndClearly(SearchInfoUtil searchInfo) {
         if (searchInfo == null) {
             return null;
         }
 
-        List<List<NodeUtil>> paths = new ArrayList<List<NodeUtil>>();
+        List<List<List<NodeUtil>>> paths = new ArrayList<List<List<NodeUtil>>>();
         final int pathSize = searchInfo.path.size();
         List<NodeUtil> strNodes = findDest(root, searchInfo.str);
         for (NodeUtil strNode : strNodes) {
             List<List<NodeUtil>> tmp = getPathFuzzyAndClearly(strNode, searchInfo.path);
-            paths.addAll(tmp);
+            if (tmp == null || tmp.isEmpty())
+                continue;
+            paths.add(tmp);
         }
         return paths;
     }
