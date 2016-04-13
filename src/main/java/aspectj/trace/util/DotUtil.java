@@ -17,6 +17,7 @@ import java.io.IOException;
 public class DotUtil {
 
     private Logger logger = Logger.getLogger(getClass());
+    private FileUtil fileUtil = new FileUtil();
 
     /**
      * 生成dot代码
@@ -47,7 +48,7 @@ public class DotUtil {
     }
 
     /**
-     * 绘图并且显示出来
+     * 绘图
      *
      * @param srcFileName
      * @param destFileName
@@ -55,26 +56,29 @@ public class DotUtil {
     public void plotDot(String srcFileName, String destFileName) {
         String execStr = "dot -Tpng " + srcFileName + " -o " + destFileName;
         try {
-            Process ps = Runtime.getRuntime().exec(execStr);
-            execStr = "open " + destFileName;
             Runtime.getRuntime().exec(execStr);
-            logger.debug(execStr);
-            // 得到执行的结果
-            String resultStr = FileUtil.loadStream(ps.getInputStream());
-            String errorStr = FileUtil.loadStream(ps.getErrorStream());
-            logger.debug(resultStr);
-            logger.error(errorStr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openPlot(String destFileName) {
+        String execStr = fileUtil.getOutFilePath() + "/dot/open.sh " + destFileName;
+        // 打开生成的图片
+        try {
+            Runtime.getRuntime().exec(execStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        DotUtil dotUtil = new DotUtil();
         FileUtil fileUtil = new FileUtil();
+        DotUtil dotUtil = new DotUtil();
         String dotName = fileUtil.getOutFilePath() + "/dot/match.dot";
-        String outName = fileUtil.getOutFilePath() + "/dot/match.png";
-        //dotUtil.generateDotCode(dotName);
-        dotUtil.plotDot(dotName, outName);
+        String destFileName = fileUtil.getOutFilePath() + "/dot/match.png";
+        dotUtil.generateDotCode(dotName);
+        //dotUtil.plotDot(dotName, destFileName);
+        dotUtil.openPlot(destFileName);
     }
 }
