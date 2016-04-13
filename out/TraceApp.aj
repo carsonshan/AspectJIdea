@@ -90,19 +90,19 @@ public aspect TraceApp {
             //_Stack.push(signature);
             _Stack.push(name);
         } else {
-            //System.out.println(thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
-            System.out.println(name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
-
-            //写入文件
-            try {
-//                _OS.write((thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
+//            //System.out.println(thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
+//            System.out.println(name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
+//
+//            //写入文件
+//            try {
+////                _OS.write((thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
+////                        + "\n").getBytes());
+//                // 写入执行的位置
+//                _OS.write((name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
 //                        + "\n").getBytes());
-                // 写入执行的位置
-                _OS.write((name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
-                        + "\n").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 

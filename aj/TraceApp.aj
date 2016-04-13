@@ -44,7 +44,7 @@ public aspect TraceApp {
 //        File projectPath = new File(targetPath.getParent());
 //        this.outFilePath = projectPath.getAbsolutePath() + "/out";
         this._SavePath = classPath.getAbsolutePath() + "/out.txt";
-        logger.debug(ajcCompiler.getOutFilePath());
+//        logger.debug(ajcCompiler.getOutFilePath());
 
 //        File file = new File(_SavePath);
 //        if (!file.exists()) {
@@ -76,7 +76,6 @@ public aspect TraceApp {
         if (declKind.equals("method-call")) {
             Object signature = thisJoinPoint.getSignature();
 
-
             if (!_Stack.empty()) {
                 //System.out.println(_Stack.peek() + " --> " + signature);
                 System.out.println(_Stack.peek() + " --> " + name);
@@ -99,19 +98,20 @@ public aspect TraceApp {
             //_Stack.push(signature);
             _Stack.push(name);
         } else {
+            // 不输出执行的位置
             //System.out.println(thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
-            System.out.println(name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
+            //System.out.println(name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
 
             //写入文件
-            try {
-//                _OS.write((thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
+//            try {
+////                _OS.write((thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
+////                        + "\n").getBytes());
+//                // 写入执行的位置
+//                _OS.write((name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
 //                        + "\n").getBytes());
-                // 写入执行的位置
-                _OS.write((name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
-                        + "\n").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
