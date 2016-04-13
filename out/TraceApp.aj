@@ -78,7 +78,7 @@ public aspect TraceApp {
                 try {
                     //_OS.write((_Stack.peek() + " --> " + signature + "\n").getBytes());
                     _OS.write((_Stack.peek() + " --> " + name + " " + thisJoinPoint.getStaticPart().getSourceLocation().toString() + "\n").getBytes());
-                    dotOS.write((_Stack.peek() + " -> " + name + "\n").getBytes());
+                    dotOS.write((_Stack.peek() + " -> " + name + ";\n").getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

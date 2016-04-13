@@ -1,5 +1,6 @@
 package aspectj.trace.core.compiler;
 
+import aspectj.trace.util.FileUtil;
 import org.apache.log4j.Logger;
 import org.aspectj.bridge.MessageHandler;
 import org.aspectj.tools.ajc.Main;
@@ -110,10 +111,13 @@ public class AjcCompiler {
         // 去除idea的编译部分
         execStr = execStr.replace(":" + ideaPath, "");
         logger.debug(execStr);
+        // 每次编译之前应该删去class文件
+        Runtime.getRuntime().exec("rm -rf " + outFilePath + "/*.class");
+        Runtime.getRuntime().exec("rm -rf " + outFilePath + "/sources.lst");
         Process ps = Runtime.getRuntime().exec(execStr);
         // 得到执行的结果
-        String resultStr = loadStream(ps.getInputStream());
-        String errorStr = loadStream(ps.getErrorStream());
+        String resultStr = FileUtil.loadStream(ps.getInputStream());
+        String errorStr = FileUtil.loadStream(ps.getErrorStream());
         //logger.debug(resultStr);
         //logger.error(errorStr);
         // 写入文件
@@ -128,23 +132,6 @@ public class AjcCompiler {
 //        ps.wait();
 //        ps.destroy();
         return resultStr;
-    }
-
-    /**
-     * 载入流中的内容
-     *
-     * @param in
-     * @return
-     * @throws IOException
-     */
-    private String loadStream(InputStream in) throws IOException {
-        int ptr = 0;
-        in = new BufferedInputStream(in);
-        StringBuffer buffer = new StringBuffer();
-        while ((ptr = in.read()) != -1) {
-            buffer.append((char) ptr);
-        }
-        return buffer.toString();
     }
 
     /**

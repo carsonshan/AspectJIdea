@@ -15,5 +15,6 @@ digraph G {
     /*下面纯粹是实验*/
     A -> B[color=red];
     B -> C[color=green];
-
+    A[color=red];
+    B[color=red];
 }

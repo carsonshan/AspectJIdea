@@ -16,6 +16,45 @@ public class FileUtil {
 
     private static String MESSAGE = "";
 
+    private String classPathDir;
+    private String outFilePath;
+    private String projectDir;
+
+    FileUtil() {
+        // 初始化文件的路径
+        File classPath = new File(this.getClass().getResource("/").getPath());
+        File targetPath = new File(classPath.getParent());
+        File projectPath = new File(targetPath.getParent());
+
+        projectDir = targetPath.getParent();
+        classPathDir = classPath.getAbsolutePath();
+        outFilePath = projectPath.getAbsolutePath() + "/out";
+    }
+
+    public String getClassPathDir() {
+        return classPathDir;
+    }
+
+    public void setClassPathDir(String classPathDir) {
+        this.classPathDir = classPathDir;
+    }
+
+    public String getOutFilePath() {
+        return outFilePath;
+    }
+
+    public void setOutFilePath(String outFilePath) {
+        this.outFilePath = outFilePath;
+    }
+
+    public String getProjectDir() {
+        return projectDir;
+    }
+
+    public void setProjectDir(String projectDir) {
+        this.projectDir = projectDir;
+    }
+
     /**
      * 复制单个文件
      *
@@ -256,6 +295,44 @@ public class FileUtil {
             e.printStackTrace();
         }
         return builder.toString();
+    }
+
+    /**
+     * 读文件内容
+     *
+     * @param fileName 文件名
+     * @return 文件内容
+     */
+    public static String readFileContent(String fileName) {
+        String content = "";
+        try {
+            InputStream inputStream = new FileInputStream(fileName);
+            byte[] result = new byte[inputStream.available()];
+            inputStream.read(result);
+            content = new String(result);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
+
+    /**
+     * 载入流中的内容
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    public static String loadStream(InputStream in) throws IOException {
+        int ptr = 0;
+        in = new BufferedInputStream(in);
+        StringBuffer buffer = new StringBuffer();
+        while ((ptr = in.read()) != -1) {
+            buffer.append((char) ptr);
+        }
+        return buffer.toString();
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
 package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
+import aspectj.trace.util.DotUtil;
 import aspectj.trace.util.FileUtil;
 import aspectj.trace.util.Pair;
 import aspectj.trace.util.TreeUtil;
@@ -24,6 +25,7 @@ import java.util.List;
  */
 public class MainForm extends Component {
     Logger logger = Logger.getLogger(getClass());
+    private DotUtil dotUtil = new DotUtil();
 
     private JPanel mainJPanel;                  // 主面板
     private JPanel leftPanel;                   // 左面板
@@ -112,6 +114,7 @@ public class MainForm extends Component {
                         FileUtil.removePackageName(outFilePath + "/" + fileName);
                         // 3.最后替换与aj编译的文件的内容
                         String content = outFilePath + "/TraceApp.aj\n" + outFilePath + "/" + fileName;
+                        logger.error(content);
                         FileUtil.writeToFile(ajcCompiler.getOutFilePath() + "/sources.lst", content);
                     }
                 }).run();
@@ -155,6 +158,12 @@ public class MainForm extends Component {
                         // 设置最右侧输出框的内容
                         rawOutputTextArea.setText("");
                         rawOutputTextArea.append(outFileContent);
+
+                        // 绘图
+                        String dotName = ajcCompiler.getOutFilePath() + "/dot/ori.dot";
+                        String outName = ajcCompiler.getOutFilePath() + "/dot/ori.png";
+                        dotUtil.generateDotCode(dotName);
+                        dotUtil.plotDot(dotName, outName);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
