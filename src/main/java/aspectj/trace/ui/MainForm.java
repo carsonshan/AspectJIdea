@@ -2,6 +2,7 @@ package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
 import aspectj.trace.util.FileUtil;
+import aspectj.trace.util.NodeUtil;
 import aspectj.trace.util.Pair;
 import aspectj.trace.util.TreeUtil;
 import org.apache.log4j.Logger;
@@ -205,16 +206,17 @@ public class MainForm extends Component {
                     String dst = functions.removeLast();
                     /*查询结果存入字符串*/
                     String[] paths = functions.toArray(new String[functions.size()]);
-                    List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPathMultiNode(src, dst, paths);
-                    for (List<Pair<String, Pair<String, String>>> c : result) {
+                    List<List<NodeUtil>> result = callTree.getCallPathMultiNode(src, dst, paths);
+                    for (List<NodeUtil> c : result) {
                         int indent = 0;
                         StringBuilder toshow = new StringBuilder();
-                        for (Pair<String, Pair<String, String>> t : c) {
+                        final int c_size_nl = c.size() - 1;
+                        for (int i=0;i<c_size_nl;++i) {
                             toshow.append(linenum + ":");
-                            for (int i = 0; i < indent; ++i) {
+                            for (int j = 0; j < indent; ++j) {
                                 toshow.append("    ");
                             }
-                            toshow.append(t.second.first + " --> " + t.second.second + "    " + t.first + "\n");
+                            toshow.append(c.get(i).getName() + " --> " + c.get(i+1).getName() + "    " + c.get(i+1).getCallLocation()+ "\n");
                             indent++;
                             linenum++;
                         }
