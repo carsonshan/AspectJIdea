@@ -48,28 +48,16 @@ public class DotUtil {
     }
 
     /**
-     * 绘图
+     * 绘图并打开
      *
      * @param srcFileName
      * @param destFileName
      */
     public void plotDot(String srcFileName, String destFileName) {
         String execStr = "dot -Tpng " + srcFileName + " -o " + destFileName;
-        try {
-            Runtime.getRuntime().exec(execStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void openPlot(String destFileName) {
-        String execStr = fileUtil.getOutFilePath() + "/dot/open.sh " + destFileName;
-        // 打开生成的图片
-        try {
-            Runtime.getRuntime().exec(execStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ExecUtil.exec(execStr);
+        execStr = "open " + destFileName;
+        ExecUtil.exec(execStr);
     }
 
     public static void main(String[] args) {
@@ -78,7 +66,6 @@ public class DotUtil {
         String dotName = fileUtil.getOutFilePath() + "/dot/match.dot";
         String destFileName = fileUtil.getOutFilePath() + "/dot/match.png";
         dotUtil.generateDotCode(dotName);
-        //dotUtil.plotDot(dotName, destFileName);
-        dotUtil.openPlot(destFileName);
+        dotUtil.plotDot(dotName, destFileName);
     }
 }
