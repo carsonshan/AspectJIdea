@@ -90,7 +90,7 @@ public class DotUtil {
      * @param fuzzySearch     是否是模糊查询
      */
     public void generateMatchedDotCode(Pair<NodeUtil, List<List<NodeUtil>>> matchedResult,
-                                       String destDotFileName, Boolean fuzzySearch) {
+                                       String destDotFileName, Boolean fuzzySearch, TreeUtil treeUtil) {
         String callSeqFile = fileUtil.getProjectDir() + "/out_dot.txt";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(callSeqFile));
@@ -183,10 +183,12 @@ public class DotUtil {
             }
             try {
                 FileWriter writer = new FileWriter(destDotFileName);
-                String dotContent = "digraph G {\n" +
-                        "    /*初始化节点和边的颜色*/\n" +
-                        "    node [peripheries=2 style=filled color=\"#eecc80\"]\n" +
-                        "    edge [color=\"sienna\" fontcolor=\"red\"]\n" + builder.toString() + "\n}";
+//                String dotContent = "digraph G {\n" +
+//                        "    /*初始化节点和边的颜色*/\n" +
+//                        "    node [peripheries=2 style=filled color=\"#eecc80\"]\n" +
+//                        "    edge [color=\"sienna\" fontcolor=\"red\"]\n" + builder.toString() + "\n}";
+
+                String dotContent = treeUtil.getDot(result_pair);
                 writer.write(dotContent);
                 writer.close();
             } catch (IOException e) {

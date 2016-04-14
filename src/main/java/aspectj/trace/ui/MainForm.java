@@ -299,7 +299,7 @@ public class MainForm extends Component {
             for (Pair<NodeUtil, List<List<NodeUtil>>> r : res) {
                 String dotName = destDotFileName + page + ".dot";
                 String pngName = destDotOutPng + page + ".png";
-                dotUtil.generateMatchedDotCode(r, dotName, fuzzySearch);
+                dotUtil.generateMatchedDotCode(r, dotName, fuzzySearch, callTree);
                 dotUtil.plotDot(dotName, pngName);
                 page++;
             }
