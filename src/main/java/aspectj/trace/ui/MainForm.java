@@ -1,7 +1,14 @@
 package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
+<<<<<<< HEAD
 import aspectj.trace.util.*;
+=======
+import aspectj.trace.util.DotUtil;
+import aspectj.trace.util.FileUtil;
+import aspectj.trace.util.Pair;
+import aspectj.trace.util.TreeUtil;
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -22,6 +29,7 @@ import java.util.List;
  */
 public class MainForm extends Component {
     Logger logger = Logger.getLogger(getClass());
+    private DotUtil dotUtil = new DotUtil();
 
     private JPanel mainJPanel;                  // 主面板
     private JPanel leftPanel;                   // 左面板
@@ -39,15 +47,24 @@ public class MainForm extends Component {
     private String outFileContent = "";                      //编译输出结果
 
     public MainForm() {
+
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();// 获取显示器大小对象
+        Dimension frame = this.getSize();      //获取窗口大小
+
         // 初始化控件的显示
         inputTextArea.setMargin(new Insets(10, 10, 10, 10));
+        //inputTextArea.setPreferredSize(new Dimension(300, 200));
+
         matchTextArea.setMargin(new Insets(10, 10, 10, 10));
-        matchTextArea.setEnabled(false);
+        //matchTextArea.setPreferredSize(new Dimension(300, 300));
+
+        //matchTextArea.setEnabled(false);
+        //rawOutputTextArea.setEnabled(false);
         rawOutputTextArea.setMargin(new Insets(10, 10, 10, 10));
-        rawOutputTextArea.setEnabled(false);
-        inputTextArea.setPreferredSize(new Dimension(1000, 800));
-        leftPanel.setPreferredSize(new Dimension(1000, 800));
-        rightPanel.setPreferredSize(new Dimension(1000, 800));
+        //rawOutputTextArea.setPreferredSize(new Dimension(600, 500));
+
+        leftPanel.setPreferredSize(new Dimension(460, 800));
+        rightPanel.setPreferredSize(new Dimension(795, 800));
 
         // 初始化ajc编译器
         ajcCompiler = new AjcCompiler();
@@ -101,6 +118,7 @@ public class MainForm extends Component {
                         FileUtil.removePackageName(outFilePath + "/" + fileName);
                         // 3.最后替换与aj编译的文件的内容
                         String content = outFilePath + "/TraceApp.aj\n" + outFilePath + "/" + fileName;
+                        logger.error(content);
                         FileUtil.writeToFile(ajcCompiler.getOutFilePath() + "/sources.lst", content);
                     }
                 }).run();
@@ -109,7 +127,10 @@ public class MainForm extends Component {
             }
         }
     }
+<<<<<<< HEAD
     //
+=======
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 
     /**
      * 编译按钮点击事件
@@ -130,6 +151,14 @@ public class MainForm extends Component {
 //                        outFileContent = ajcCompiler.run(outFile, className);
                         ajcCompiler.run(outFile, className);
 
+                        File outFile = new File("outaj.txt");
+                        if (!outFile.exists()) {
+                            outFile.createNewFile();
+                        }
+                        outFile = new File("out_dot.txt");
+                        if (!outFile.exists()) {
+                            outFile.createNewFile();
+                        }
                         InputStream _Is = new FileInputStream("outaj.txt");
                         byte[] result = new byte[_Is.available()];
                         _Is.read(result);
@@ -137,6 +166,12 @@ public class MainForm extends Component {
                         // 设置最右侧输出框的内容
                         rawOutputTextArea.setText("");
                         rawOutputTextArea.append(outFileContent);
+
+                        // 绘制原始图形
+                        String dotName = ajcCompiler.getOutFilePath() + "/dot/ori.dot";
+                        String destFileName = ajcCompiler.getOutFilePath() + "/dot/ori.png";
+                        dotUtil.generateDotCode(dotName);
+                        dotUtil.plotDot(dotName, destFileName);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -181,6 +216,7 @@ public class MainForm extends Component {
                         unit.add(k);
                     }
                 }
+<<<<<<< HEAD
                 int unitSize = unit.size();
                 if (unitSize % 2 != 1 || unitSize < 3) {
                     finalShow = new StringBuilder();
@@ -202,8 +238,20 @@ public class MainForm extends Component {
                         finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
                         matchTextArea.append(finalShow.toString());
                         return;
+=======
+                //A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9 --> A10
+                int comSize = com.size();
+                boolean checkInput = true;
+                int comIndex = 0;
+                LinkedList<String> functions = new LinkedList<String>();
+                for (; comIndex + 1 < comSize; comIndex += 2) {
+                    if (!com.get(comIndex + 1).equals("-->")) {
+                        checkInput = false;
+                        break;
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                     }
                 }
+<<<<<<< HEAD
                 searchOrder.add(oneSearch);
             }
             Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
@@ -217,6 +265,32 @@ public class MainForm extends Component {
                         toshow.append(linenum++ + ":");
                         for (int j = 0; j < indent; ++j) {
                             toshow.append("    ");
+=======
+
+                if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
+                    finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
+                    linenum++;
+                } else {
+                    /*添加最后的目标函数*/
+                    functions.add(com.get(comSize - 1));
+                    /*掐头去尾*/
+                    String src = functions.removeFirst();
+                    String dst = functions.removeLast();
+                    /*查询结果存入字符串*/
+                    String[] paths = functions.toArray(new String[functions.size()]);
+                    List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPathMultiNode(src, dst, paths);
+                    for (List<Pair<String, Pair<String, String>>> c : result) {
+                        int indent = 0;
+                        StringBuilder toshow = new StringBuilder();
+                        for (Pair<String, Pair<String, String>> t : c) {
+                            toshow.append(linenum + ":");
+                            for (int i = 0; i < indent; ++i) {
+                                toshow.append("    ");
+                            }
+                            toshow.append(t.second.first + " --> " + t.second.second + "    " + t.first + "\n");
+                            indent++;
+                            linenum++;
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                         }
                         toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
                         indent++;
@@ -290,6 +364,8 @@ public class MainForm extends Component {
         JFrame frame = new JFrame("子程序调用序列匹配");
         frame.setContentPane(new MainForm().mainJPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);//最大化窗体
+        frame.setLocationRelativeTo(null);//窗体居中
         frame.pack();
         frame.setVisible(true);
     }

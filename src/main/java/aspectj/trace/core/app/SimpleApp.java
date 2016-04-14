@@ -8,7 +8,7 @@ import java.io.IOException;
  * Author: Noprom <tyee.noprom@qq.com>
  * Date: 16/3/4 下午4:38.
  */
-public class App {
+public class SimpleApp {
 
     public void A1() {
         System.out.println("In A1");
@@ -101,8 +101,6 @@ public class App {
     public void B7() {
         System.out.println("In B7");
         B8();
-        B8();
-        B8();
         C9();
     }
 
@@ -120,11 +118,9 @@ public class App {
 
     public void B10() {
         System.out.println("In B10");
-        C1();
         C2();
         C3();
         C4();
-        C5();
         C6();
     }
 
@@ -136,12 +132,10 @@ public class App {
         System.out.println("In C2");
         C3();
         C4();
-        C5();
     }
 
     public void C3() {
         System.out.println("In C3");
-        C4();
         C5();
     }
 
@@ -154,7 +148,6 @@ public class App {
         System.out.println("In C5");
         C6();
         C7();
-        C8();
     }
 
     public void C6() {
@@ -167,9 +160,7 @@ public class App {
 
     public void C8() {
         System.out.println("In C8");
-        for (int i = 0; i < 10; i++) {
-            C10();
-        }
+        C10();
     }
 
     public void C9() {
@@ -184,7 +175,7 @@ public class App {
     }
 
     public static void main(String[] args) throws IOException {
-        App app = new App();
+        SimpleApp app = new SimpleApp();
         app.A1();
     }
 }
