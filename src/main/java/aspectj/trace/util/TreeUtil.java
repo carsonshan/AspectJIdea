@@ -28,7 +28,8 @@ public class TreeUtil {
             //A3[color=red];
             dotString.append(r.getName() + "[color=red]\n");
         }
-        dotString.append(result.first.getName() + "[color=blue]\n}");
+        dotString.append(result.first.getName() + "[color=green]\n");
+        dotString.append("}");
         return dotString.toString();
     }
 
