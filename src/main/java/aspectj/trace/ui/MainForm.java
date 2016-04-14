@@ -1,25 +1,21 @@
 package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
-<<<<<<< HEAD
 import aspectj.trace.util.*;
-=======
-import aspectj.trace.util.DotUtil;
-import aspectj.trace.util.FileUtil;
-import aspectj.trace.util.Pair;
-import aspectj.trace.util.TreeUtil;
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.text.Style;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 程序主界面
@@ -127,10 +123,6 @@ public class MainForm extends Component {
             }
         }
     }
-<<<<<<< HEAD
-    //
-=======
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 
     /**
      * 编译按钮点击事件
@@ -216,7 +208,7 @@ public class MainForm extends Component {
                         unit.add(k);
                     }
                 }
-<<<<<<< HEAD
+
                 int unitSize = unit.size();
                 if (unitSize % 2 != 1 || unitSize < 3) {
                     finalShow = new StringBuilder();
@@ -238,7 +230,7 @@ public class MainForm extends Component {
                         finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
                         matchTextArea.append(finalShow.toString());
                         return;
-=======
+
                 //A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9 --> A10
                 int comSize = com.size();
                 boolean checkInput = true;
@@ -248,10 +240,10 @@ public class MainForm extends Component {
                     if (!com.get(comIndex + 1).equals("-->")) {
                         checkInput = false;
                         break;
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
+
                     }
                 }
-<<<<<<< HEAD
+
                 searchOrder.add(oneSearch);
             }
             Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
@@ -265,7 +257,6 @@ public class MainForm extends Component {
                         toshow.append(linenum++ + ":");
                         for (int j = 0; j < indent; ++j) {
                             toshow.append("    ");
-=======
 
                 if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
                     finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
@@ -290,7 +281,6 @@ public class MainForm extends Component {
                             toshow.append(t.second.first + " --> " + t.second.second + "    " + t.first + "\n");
                             indent++;
                             linenum++;
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                         }
                         toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
                         indent++;
