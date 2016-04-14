@@ -7,8 +7,8 @@ import java.util.List;
  * Created by syc on 4/1/16.
  */
 public class Pair<A, B> {
-    public final A first;
-    public final B second;
+    public A first;
+    public B second;
 
     public Pair(A first, B second) {
         this.first = first == null ? null : first;

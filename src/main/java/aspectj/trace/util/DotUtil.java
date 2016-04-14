@@ -3,9 +3,7 @@ package aspectj.trace.util;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * DotUtil
@@ -64,10 +62,12 @@ public class DotUtil {
     /**
      * 生成匹配之后的dot代码
      *
+     * @param matchedResult   匹配的结果
      * @param destDotFileName 目标dot代码文件名
+     * @param fuzzySearch     是否是模糊查询
      */
     public void generateMatchedDotCode(Set<Pair<NodeUtil, List<List<NodeUtil>>>> matchedResult,
-                                       String destDotFileName) {
+                                       String destDotFileName, Boolean fuzzySearch) {
         String callSeqFile = fileUtil.getProjectDir() + "/out_dot.txt";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(callSeqFile));
@@ -100,6 +100,18 @@ public class DotUtil {
                     }
                 }
             }
+            // 得到唯一的除去重复的调用序列
+            // 比如有:A1->B2,B2->B3,A1->B2
+            // 那么除去重复之后:A1->B2,B2->B3
+            Map<String, Boolean> uniqueCallMap = new HashMap<String, Boolean>();
+            for (Pair<Pair<String, String>, Boolean> pair : allCallList) {
+                String key = pair.first.first + "->" + pair.first.second;
+                Boolean exist = uniqueCallMap.get(key);
+                if (exist == null) {
+                    uniqueCallMap.put(key, pair.second);
+                }
+            }
+
             // 在所有的调用序列中标记已经匹配到的
             StringBuilder builder = new StringBuilder();
             StringBuilder nodeBuilder = new StringBuilder();
@@ -109,7 +121,22 @@ public class DotUtil {
                 for (Pair<String, String> matchedPair : matchedList) {
                     if (matchedPair.first.equals(pair.first.first)
                             && matchedPair.second.equals(pair.first.second)) {
-                        String redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red];\n";
+                        // 是否是模糊查询
+                        String redBlock = "";
+                        if (fuzzySearch) {// 模糊查询显示虚线
+                            // 匹配的只显示一次
+                            String key = pair.first.first + "->" + pair.first.second;
+                            Boolean alreadyMatch = uniqueCallMap.get(key);
+                            if (alreadyMatch != null && !alreadyMatch) {
+                                redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red, style = dotted];\n";
+                                uniqueCallMap.put(key, true);
+                            } else {
+                                redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red];\n";
+                            }
+                        } else {
+                            redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red];\n";
+                        }
+
                         builder.append(redBlock);
                         nodeBuilder.append(matchedPair.first + "[color=red];\n");
                         nodeBuilder.append(matchedPair.second + "[color=red];\n");

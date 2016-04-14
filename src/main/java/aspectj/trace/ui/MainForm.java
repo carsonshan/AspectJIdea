@@ -202,7 +202,7 @@ public class MainForm extends Component {
                     }
                 }
             }
-
+            Boolean fuzzySearch = false;
             String[] lines = inputTextArea.getText().split("\n");
             int linenum = 1;
             StringBuilder finalShow = new StringBuilder("");
@@ -231,6 +231,7 @@ public class MainForm extends Component {
                     if (symbol.equals("-->")) {
                         oneSearch.path.add(new Pair<String, SearchInfoUtil.Method>(function, SearchInfoUtil.Method.CLEAR));
                     } else if (symbol.equals("-...->")) {
+                        fuzzySearch = true;
                         oneSearch.path.add(new Pair<String, SearchInfoUtil.Method>(function, SearchInfoUtil.Method.FUZZY));
                     } else {
                         finalShow = new StringBuilder();
@@ -261,7 +262,7 @@ public class MainForm extends Component {
                 }
             }
             // 生成调用序列匹配的dot代码
-            dotUtil.generateMatchedDotCode(res, destDotFileName);
+            dotUtil.generateMatchedDotCode(res, destDotFileName, fuzzySearch);
             dotUtil.plotDot(destDotFileName, destDotOutPng);
             /*对每行查询指令进行查询*/
 //            for (
