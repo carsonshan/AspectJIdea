@@ -110,7 +110,7 @@ public class AjcCompiler {
         String execStr = "java" + " -cp " + CLASSPATH + " " + className;
         // 去除idea的编译部分
         execStr = execStr.replace(":" + ideaPath, "");
-        logger.debug(execStr);
+        //logger.debug(execStr);
         // 每次编译之前应该删去class文件
         Runtime.getRuntime().exec("rm -rf " + outFilePath + "/*.class");
         Runtime.getRuntime().exec("rm -rf " + outFilePath + "/sources.lst");

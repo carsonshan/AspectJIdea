@@ -116,6 +116,8 @@ public class MainForm extends Component {
                 final String filePath = chooser.getCurrentDirectory().toString()
                         + File.separator + fileName; // 选择文件的文件路径
                 className = fileName.replace(".java", "");
+                // 在最上方的label显示选择的文件的名字
+                fileNamesLabel.setText(fileName);
                 // 开启线程在out文件夹下面创建一个同样的文件,并去掉包名
                 new Thread(new Runnable() {
                     @Override
@@ -127,7 +129,6 @@ public class MainForm extends Component {
                         FileUtil.removePackageName(outFilePath + "/" + fileName);
                         // 3.最后替换与aj编译的文件的内容
                         String content = outFilePath + "/TraceApp.aj\n" + outFilePath + "/" + fileName;
-                        logger.error(content);
                         FileUtil.writeToFile(ajcCompiler.getOutFilePath() + "/sources.lst", content);
                     }
                 }).run();
