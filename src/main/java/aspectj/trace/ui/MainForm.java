@@ -278,7 +278,7 @@ public class MainForm extends Component {
             //这个是返回的结果，是Pair<根节点 ，List<路径节点>>的结构，目前size只有1或者0
             Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
             for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : res) {
-                //finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "\n");
+                finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "    " + result_pair.first.getCallLocation() + "\n");
                 for (List<NodeUtil> c : result_pair.second) {
                     int indent = 0;
                     StringBuilder toshow = new StringBuilder();

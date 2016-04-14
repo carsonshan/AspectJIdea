@@ -24,7 +24,7 @@ public class TreeUtil {
      */
     public NodeUtil addRunTime(String srcFunction, String dstFunction, String callLocation, int runLineNum) {
         if (root == null) {
-            root = new NodeUtil(srcFunction, null, "str", 0);
+            root = new NodeUtil(srcFunction, null, "", 0);
             now = root;
         }
 
