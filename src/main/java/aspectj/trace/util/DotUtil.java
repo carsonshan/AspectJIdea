@@ -98,8 +98,7 @@ public class DotUtil {
             List<Pair<Pair<String, String>, Boolean>> allCallList = new ArrayList<Pair<Pair<String, String>, Boolean>>();
             String line = null;
             while ((line = reader.readLine()) != null) {
-                line = line.substring(0, line.length() - 1);
-                String[] seqs_t = line.split("(->|\\s+)");
+                String[] seqs_t = line.split("(->|\\s+|\\[*\\])");
                 List<String> seqs_t2 = new ArrayList<String>();
                 for (String s : seqs_t) {
                     if (s.equals("")) {
@@ -138,8 +137,9 @@ public class DotUtil {
             // 在所有的调用序列中标记已经匹配到的
             StringBuilder builder = new StringBuilder();
             StringBuilder nodeBuilder = new StringBuilder();
+            Integer numberCounter = 1;
             for (Pair<Pair<String, String>, Boolean> pair : allCallList) {
-                String commonBlock = pair.first.first + " -> " + pair.first.second + ";\n";
+                String commonBlock = pair.first.first + " -> " + pair.first.second + "[label=" + numberCounter + "];\n";
                 Boolean match = false;
                 for (Pair<String, String> matchedPair : matchedList) {
                     if (matchedPair.first.equals(pair.first.first)
@@ -151,13 +151,13 @@ public class DotUtil {
                             String key = pair.first.first + "->" + pair.first.second;
                             Boolean alreadyMatch = uniqueCallMap.get(key);
                             if (alreadyMatch != null && !alreadyMatch) {
-                                redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red, style = dotted];\n";
+                                redBlock = matchedPair.first + " -> " + matchedPair.second + "[label=" + numberCounter + " color=red style = dotted];\n";
                                 uniqueCallMap.put(key, true);
                             } else {
-                                redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red];\n";
+                                redBlock = matchedPair.first + " -> " + matchedPair.second + "[label=" + numberCounter + " color=red];\n";
                             }
                         } else {
-                            redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red];\n";
+                            redBlock = matchedPair.first + " -> " + matchedPair.second + "[label=" + numberCounter + " color=red];\n";
                         }
 
                         builder.append(redBlock);
@@ -169,6 +169,7 @@ public class DotUtil {
                 if (!match) {
                     builder.append(commonBlock);
                 }
+                numberCounter++;
             }
             builder.append(nodeBuilder.toString());
             // 写入dot代码
