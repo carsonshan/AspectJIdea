@@ -1,10 +1,14 @@
 package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
+<<<<<<< HEAD
+import aspectj.trace.util.*;
+=======
 import aspectj.trace.util.DotUtil;
 import aspectj.trace.util.FileUtil;
 import aspectj.trace.util.Pair;
 import aspectj.trace.util.TreeUtil;
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -123,6 +127,10 @@ public class MainForm extends Component {
             }
         }
     }
+<<<<<<< HEAD
+    //
+=======
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 
     /**
      * 编译按钮点击事件
@@ -184,11 +192,12 @@ public class MainForm extends Component {
             /*生成调用关系树*/
             String[] outLines = outFileContent.split("\n");
             TreeUtil callTree = new TreeUtil();
+            int lineNum = 1;
             for (String r : outLines) {
                 String[] words = r.split("\\s+");
                 for (int i = 1; i < words.length - 1; ++i) {
                     if (words[i].equals("-->")) {
-                        callTree.addRunTime(words[i - 1], words[i + 1], words[i + 2]);
+                        callTree.addRunTime(words[i - 1], words[i + 1], words[i + 2], lineNum++);
                         break;
                     }
                 }
@@ -198,15 +207,38 @@ public class MainForm extends Component {
             int linenum = 1;
             StringBuilder finalShow = new StringBuilder("");
 
-            /*对每行查询指令进行查询*/
+            List<SearchInfoUtil> searchOrder = new ArrayList<SearchInfoUtil>();
             for (String r : lines) {
-                String[] com_t = r.split("\\s+");
-                List<String> com = new ArrayList<String>();
-                for (String k : com_t) {
+                String[] unit_t = r.split("\\s+");
+                List<String> unit = new ArrayList<String>();
+                for (String k : unit_t) {
                     if (!k.equals("")) {
-                        com.add(k);
+                        unit.add(k);
                     }
                 }
+<<<<<<< HEAD
+                int unitSize = unit.size();
+                if (unitSize % 2 != 1 || unitSize < 3) {
+                    finalShow = new StringBuilder();
+                    finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
+                    matchTextArea.append(finalShow.toString());
+                    return;
+                }
+                SearchInfoUtil oneSearch = new SearchInfoUtil();
+                oneSearch.str = unit.get(0);
+                for (int i = 2; i < unitSize; i += 2) {
+                    String symbol = unit.get(i - 1);
+                    String function = unit.get(i);
+                    if (symbol.equals("-->")) {
+                        oneSearch.path.add(new Pair<String, SearchInfoUtil.Method>(function, SearchInfoUtil.Method.CLEAR));
+                    } else if (symbol.equals("-...->")) {
+                        oneSearch.path.add(new Pair<String, SearchInfoUtil.Method>(function, SearchInfoUtil.Method.FUZZY));
+                    } else {
+                        finalShow = new StringBuilder();
+                        finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
+                        matchTextArea.append(finalShow.toString());
+                        return;
+=======
                 //A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9 --> A10
                 int comSize = com.size();
                 boolean checkInput = true;
@@ -216,9 +248,24 @@ public class MainForm extends Component {
                     if (!com.get(comIndex + 1).equals("-->")) {
                         checkInput = false;
                         break;
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                     }
-                    functions.add(com.get(comIndex));
                 }
+<<<<<<< HEAD
+                searchOrder.add(oneSearch);
+            }
+            Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
+            for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : res) {
+                finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "\n");
+                for (List<NodeUtil> c : result_pair.second) {
+                    int indent = 0;
+                    StringBuilder toshow = new StringBuilder();
+                    final int c_size_nl = c.size() - 1;
+                    for (int i = 0; i < c_size_nl; ++i) {
+                        toshow.append(linenum++ + ":");
+                        for (int j = 0; j < indent; ++j) {
+                            toshow.append("    ");
+=======
 
                 if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
                     finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
@@ -243,13 +290,74 @@ public class MainForm extends Component {
                             toshow.append(t.second.first + " --> " + t.second.second + "    " + t.first + "\n");
                             indent++;
                             linenum++;
+>>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                         }
-                        finalShow.append(toshow);
+                        toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
+                        indent++;
                     }
+                    finalShow.append(toshow);
                 }
             }
+
+            /*对每行查询指令进行查询*/
+//            for (
+//                    String r
+//                    : lines)
+//
+//            {
+//                String[] com_t = r.split("\\s+");
+//                List<String> com = new ArrayList<String>();
+//                for (String k : com_t) {
+//                    if (!k.equals("")) {
+//                        com.add(k);
+//                    }
+//                }
+//                //A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9 --> A10
+//                int comSize = com.size();
+//                boolean checkInput = true;
+//                int comIndex = 0;
+//                LinkedList<String> functions = new LinkedList<String>();
+//                for (; comIndex + 1 < comSize; comIndex += 2) {
+//                    if (!com.get(comIndex + 1).equals("-->")) {
+//                        checkInput = false;
+//                        break;
+//                    }
+//                    functions.add(com.get(comIndex));
+//                }
+//
+//                if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
+//                    finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
+//                    linenum++;
+//                } else {
+//                    /*添加最后的目标函数*/
+//                    functions.add(com.get(comSize - 1));
+//                    /*掐头去尾*/
+//                    String src = functions.removeFirst();
+//                    String dst = functions.removeLast();
+//                    /*查询结果存入字符串*/
+//                    String[] paths = functions.toArray(new String[functions.size()]);
+//                    List<List<NodeUtil>> result = callTree.getCallPathMultiNode(src, dst, paths);
+//                    for (List<NodeUtil> c : result) {
+//                        int indent = 0;
+//                        StringBuilder toshow = new StringBuilder();
+//                        final int c_size_nl = c.size() - 1;
+//                        for (int i = 0; i < c_size_nl; ++i) {
+//                            toshow.append(linenum + ":");
+//                            for (int j = 0; j < indent; ++j) {
+//                                toshow.append("    ");
+//                            }
+//                            toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
+//                            indent++;
+//                            linenum++;
+//                        }
+//                        finalShow.append(toshow);
+//                    }
+//                }
+//            }
+
             matchTextArea.append(finalShow.toString());
         }
+
     }
 
     public static void main(String[] args) {

@@ -22,13 +22,58 @@ public class TreeUtil {
      * @param callLocation
      * @return
      */
-    public NodeUtil addRunTime(String srcFunction, String dstFunction, String callLocation) {
+    public NodeUtil addRunTime(String srcFunction, String dstFunction, String callLocation, int runLineNum) {
         if (root == null) {
-            root = new NodeUtil(srcFunction, null, "str");
+            root = new NodeUtil(srcFunction, null, "str", 0);
             now = root;
         }
 
-        return runNext(srcFunction, dstFunction, callLocation);
+        return runNext(srcFunction, dstFunction, callLocation, runLineNum);
+    }
+
+
+    /**
+     * 按照要求查询条件单行查询所有查询
+     *
+     * @param searchOrder
+     * @return 外层list：不同行查询；第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+     */
+    public List<List<List<List<NodeUtil>>>> getCallPathOrdered(List<SearchInfoUtil> searchOrder) {
+        List<List<List<List<NodeUtil>>>> searchResult = new ArrayList<List<List<List<NodeUtil>>>>();
+        for (SearchInfoUtil r : searchOrder) {
+            List<List<List<NodeUtil>>> result = getPathFuzzyAndClearly(r);
+            if (result == null || result.isEmpty()) {
+                continue;
+            }
+            searchResult.add(result);
+        }
+        return searchResult;
+    }
+
+    /**
+     * 获取符合条件的查询树集合
+     *
+     * @param searchOrder
+     * @return Set<Pair<树根节点, 所有调用路径>>
+     */
+    public Set<Pair<NodeUtil, List<List<NodeUtil>>>> getCallPathTreeOrdered(List<SearchInfoUtil> searchOrder) {
+        Set<Pair<NodeUtil, List<List<NodeUtil>>>> result = new HashSet<Pair<NodeUtil, List<List<NodeUtil>>>>();
+        //外层list：不同行查询；第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+        List<List<List<List<NodeUtil>>>> searchResult = getCallPathOrdered(searchOrder);
+        if (searchResult == null || searchResult.isEmpty()) {
+            return result;
+        }
+        List<List<NodeUtil>> toSearch = new ArrayList<List<NodeUtil>>();
+        //第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+        //// TODO: 4/14/16 排列组合多次查询 
+        for (List<List<List<NodeUtil>>> r : searchResult) {
+            toSearch.add(new ArrayList<NodeUtil>(r.get(0).get(0)));
+        }
+        Pair<NodeUtil, List<List<NodeUtil>>> tmp = getOneCallPathTree(toSearch);
+        if (tmp != null) {
+            result.add(tmp);
+        }
+        return result;
     }
 
     /**
@@ -39,21 +84,21 @@ public class TreeUtil {
      * @param path
      * @return
      */
-    public List<List<Pair<String, Pair<String, String>>>> getCallPathMultiNode(String srcFunction, String dstFunction ,String[] path){
-        List<List<Pair<String, Pair<String, String>>>> allPath = getCallPathsStrTODst(srcFunction, dstFunction);
-        List<List<Pair<String, Pair<String, String>>>> fitPath = new ArrayList<List<Pair<String, Pair<String, String>>>>();
-        for(List<Pair<String, Pair<String, String>>> r: allPath){
+    public List<List<NodeUtil>> getCallPathMultiNode(String srcFunction, String dstFunction, String[] path) {
+        List<List<NodeUtil>> allPath = getCallPathsStrTODst(srcFunction, dstFunction);
+        List<List<NodeUtil>> fitPath = new ArrayList<List<NodeUtil>>();
+        for (List<NodeUtil> r : allPath) {
             int pathIndex = 0;
             int rSize_NL = r.size() - 1;
-            for(int rIndex = 0;rIndex<rSize_NL;rIndex++){
-                if(pathIndex == path.length){
+            for (int rIndex = 1; rIndex < rSize_NL; rIndex++) {
+                if (pathIndex == path.length) {
                     break;
                 }
-                if (r.get(rIndex).second.second.equals(path[pathIndex])){
+                if (r.get(rIndex).getName().equals(path[pathIndex])) {
                     pathIndex++;
                 }
             }
-            if(pathIndex == path.length){
+            if (pathIndex == path.length) {
                 fitPath.add(r);
             }
         }
@@ -65,9 +110,9 @@ public class TreeUtil {
      *
      * @param srcFunction
      * @param dstFunction
-     * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
+     * @return
      */
-    public List<List<Pair<String, Pair<String, String>>>> getCallPathsStrTODst(String srcFunction, String dstFunction) {
+    public List<List<NodeUtil>> getCallPathsStrTODst(String srcFunction, String dstFunction) {
         return findPaths(root, srcFunction, dstFunction);
     }
 
@@ -79,7 +124,8 @@ public class TreeUtil {
      * @param callLocation
      * @return
      */
-    private NodeUtil runNext(String srcFunction, String dstFunction, String callLocation) {
+
+    private NodeUtil runNext(String srcFunction, String dstFunction, String callLocation, int runLineNum) {
         while (now.getParentNode() != null) {
             if (!now.getName().equals(srcFunction)) {
                 now = now.getParentNode();
@@ -87,7 +133,7 @@ public class TreeUtil {
                 break;
             }
         }
-        NodeUtil childNode = new NodeUtil(dstFunction, now, callLocation);
+        NodeUtil childNode = new NodeUtil(dstFunction, now, callLocation, runLineNum);
         now = childNode;
         return now;
     }
@@ -98,10 +144,10 @@ public class TreeUtil {
      * @param strNode
      * @param srcFunction
      * @param dstFunction
-     * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
+     * @return
      */
-    private List<List<Pair<String, Pair<String, String>>>> findPaths(NodeUtil strNode, String srcFunction, String dstFunction) {
-        List<List<Pair<String, Pair<String, String>>>> paths = new ArrayList<List<Pair<String, Pair<String, String>>>>();
+    private List<List<NodeUtil>> findPaths(NodeUtil strNode, String srcFunction, String dstFunction) {
+        List<List<NodeUtil>> paths = new ArrayList<List<NodeUtil>>();
         if (strNode == null) {
             return paths;
         }
@@ -120,16 +166,19 @@ public class TreeUtil {
      *
      * @param strNode
      * @param dstFunction
-     * @return List<List<Pair<调用行,Pair<调用者,被调用者>>>>
+     * @return
      */
-    private List<List<Pair<String, Pair<String, String>>>> findToDest(NodeUtil strNode, String dstFunction) {
-        List<List<Pair<String, Pair<String, String>>>> paths = new ArrayList<List<Pair<String, Pair<String, String>>>>();
+    private List<List<NodeUtil>> findToDest(NodeUtil strNode, String dstFunction) {
+        List<List<NodeUtil>> paths = new ArrayList<List<NodeUtil>>();
         if (strNode == null) {
             return paths;
         }
         List<NodeUtil> dests = findDest(strNode, dstFunction);
         for (NodeUtil r : dests) {
-            paths.add(getOnePath(strNode, r));
+            List<NodeUtil> tmp = getOnePath(strNode, r);
+            if (tmp != null && !tmp.isEmpty()) {
+                paths.add(tmp);
+            }
         }
         return paths;
     }
@@ -160,26 +209,193 @@ public class TreeUtil {
      *
      * @param str
      * @param dest
-     * @return List<Pair<调用行,Pair<调用者,被调用者>>>
+     * @return
      */
-    private List<Pair<String, Pair<String, String>>> getOnePath(NodeUtil str, NodeUtil dest) {
-        List<Pair<String, Pair<String, String>>> path_r = new ArrayList<Pair<String, Pair<String, String>>>();
+    private List<NodeUtil> getOnePath(NodeUtil str, NodeUtil dest) {
+        List<NodeUtil> path_r = new ArrayList<NodeUtil>();
         if (dest == null) {
             return path_r;
         }
         NodeUtil now_t = dest;
-        NodeUtil parent = dest.getParentNode();
-        while (parent != null && !(parent == str)) {
-            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(), new Pair<String, String>(parent.getName(), now_t.getName())));
-            now_t = parent;
-            parent = now_t.getParentNode();
+        while (now_t != null && now_t != str) {
+            path_r.add(now_t);
+            now_t = now_t.getParentNode();
         }
-        if (parent == null) {
+        if (now_t == null) {
             path_r.clear();
         } else {
-            path_r.add(new Pair<String, Pair<String, String>>(now_t.getCallLocation(), new Pair<String, String>(parent.getName(), now_t.getName())));
+            path_r.add(now_t);
             Collections.reverse(path_r);
         }
         return path_r;
+    }
+
+    /**
+     * 根据待查询信息（起始节点名和经过函数）查询合适路径
+     *
+     * @param searchInfo
+     * @return 外层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+     */
+    private List<List<List<NodeUtil>>> getPathFuzzyAndClearly(SearchInfoUtil searchInfo) {
+        if (searchInfo == null) {
+            return null;
+        }
+
+        List<List<List<NodeUtil>>> paths = new ArrayList<List<List<NodeUtil>>>();
+        final int pathSize = searchInfo.path.size();
+        List<NodeUtil> strNodes = findDest(root, searchInfo.str);
+        for (NodeUtil strNode : strNodes) {
+            List<List<NodeUtil>> tmp = getPathFuzzyAndClearly(strNode, searchInfo.path);
+            if (tmp == null || tmp.isEmpty())
+                continue;
+            paths.add(tmp);
+        }
+        return paths;
+    }
+
+    /**
+     * 根据起始节点和经过函数查询合适路径
+     *
+     * @param strNode
+     * @param path
+     * @return
+     */
+    private List<List<NodeUtil>> getPathFuzzyAndClearly(NodeUtil strNode, List<Pair<String, SearchInfoUtil.Method>> path) {
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
+        //下一个查询队列
+        List<Pair<String, SearchInfoUtil.Method>> nextPath = path.subList(1, path.size());
+        //下一个目标函数
+        Pair<String, SearchInfoUtil.Method> next = path.get(0);
+        //查询结果
+        List<List<NodeUtil>> result = new ArrayList<List<NodeUtil>>();
+        //下一个目标函数节点
+        List<List<NodeUtil>> res = new ArrayList<List<NodeUtil>>();
+        switch (next.second) {
+            case FUZZY: {
+                res = findToDest(strNode, next.first);
+                break;
+            }
+            case CLEAR: {
+                for (NodeUtil child : strNode.getChildNodes()) {
+                    if (child.getName().equals(next.first)) {
+                        List<NodeUtil> tmp = new ArrayList<NodeUtil>();
+                        tmp.add(strNode);
+                        tmp.add(child);
+                        res.add(tmp);
+                    }
+                }
+            }
+            default:
+                break;
+        }
+        if (res == null && res.isEmpty()) {
+            return null;
+        }
+        //查询队列不为空
+        if (!nextPath.isEmpty()) {
+            for (List<NodeUtil> r : res) {
+                List<List<NodeUtil>> nextRes = getPathFuzzyAndClearly(r.get(r.size() - 1), nextPath);
+                if (nextRes != null && !nextRes.isEmpty()) {
+                    for (List<NodeUtil> c : nextRes) {
+                        if (c != null && !c.isEmpty()) {
+                            List<NodeUtil> tmp = new ArrayList<NodeUtil>();
+                            tmp.addAll(r);
+                            tmp.addAll(c.subList(1, c.size()));
+                            result.add(tmp);
+                        }
+                    }
+                }
+            }
+        }
+        //查询队列为空
+        else {
+            result = res;
+        }
+        return result;
+    }
+
+    /**
+     * 根据目标调用序列获取符合目标调用序列的最小子树根节点
+     *
+     * @param toSearch
+     * @return 根节点和目标调用序列
+     */
+    private Pair<NodeUtil, List<List<NodeUtil>>> getOneCallPathTree(List<List<NodeUtil>> toSearch) {
+        if (toSearch == null) {
+            return null;
+        }
+        if (toSearch.size() == 1) {
+            return new Pair<NodeUtil, List<List<NodeUtil>>>(toSearch.get(0).get(0), toSearch);
+        }
+        //// TODO: 4/14/16 toSearch顺序判定
+        List<NodeUtil> strNodes = new ArrayList<NodeUtil>();
+        for (List<NodeUtil> r : toSearch) {
+            strNodes.add(r.get(0));
+        }
+        Map<NodeUtil, Integer> containNum = new HashMap<NodeUtil, Integer>();
+        contains(root, strNodes, containNum);
+        NodeUtil root = findRoot(this.root, strNodes, containNum);
+        if (root != null) {
+//            Set<NodeUtil> runIn = new HashSet<NodeUtil>();
+//            for (List<NodeUtil> r : toSearch) {
+//                runIn.addAll(r);
+//            }
+//            List<NodeUtil> nodes = new ArrayList<NodeUtil>();
+//            nodes.addAll(runIn);
+            return new Pair<NodeUtil, List<List<NodeUtil>>>(root, toSearch);
+        }
+        return null;
+    }
+
+    /**
+     * 在以root为根节点的树中根据目标节点获取包含目标节点的最小子树根节点
+     *
+     * @param root
+     * @param strNodes
+     * @param containNum 每个节点包含的目标节点的个数
+     * @return
+     */
+    private NodeUtil findRoot(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil, Integer> containNum) {
+        if (containAll(root, strNodes, containNum)) {
+            for (NodeUtil r : root.getChildNodes()) {
+                if (containAll(r, strNodes, containNum)) {
+                    return findRoot(r, strNodes, containNum);
+                }
+            }
+            return root;
+        }
+        return null;
+    }
+
+    /**
+     * 判定该root节点为根节点的子树是否包含所有目标节点
+     * @param root
+     * @param strNodes
+     * @param containNum
+     * @return
+     */
+    private boolean containAll(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil, Integer> containNum) {
+        return containNum.get(root) == strNodes.size();
+    }
+
+    /**
+     * 统计以root为根节点的树的所有子节点为根的树中包含目标节点的个数，并存入containNum
+     *
+     * @param root
+     * @param strNodes
+     * @param containNum
+     */
+    private void contains(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil, Integer> containNum) {
+        int result = 0;
+        if (strNodes.contains(root)) {
+            result++;
+        }
+        for (NodeUtil r : root.getChildNodes()) {
+            contains(r, strNodes, containNum);
+            result += containNum.get(r);
+        }
+        containNum.put(root, result);
     }
 }
