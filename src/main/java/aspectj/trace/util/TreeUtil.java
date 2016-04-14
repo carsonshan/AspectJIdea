@@ -43,7 +43,7 @@ public class TreeUtil {
         for (SearchInfoUtil r : searchOrder) {
             List<List<List<NodeUtil>>> result = getPathFuzzyAndClearly(r);
             if (result == null || result.isEmpty()) {
-                continue;
+                return null;
             }
             searchResult.add(result);
         }
@@ -63,16 +63,30 @@ public class TreeUtil {
         if (searchResult == null || searchResult.isEmpty()) {
             return result;
         }
-        List<List<NodeUtil>> toSearch = new ArrayList<List<NodeUtil>>();
-        //第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
-        //// TODO: 4/14/16 排列组合多次查询 
+        //将名称相同但位置不同的根节点合并在一个list中
+        //外层list：不同行查询；第二层list：不同路径；内层list：路径上节点
+        List<List<List<NodeUtil>>> resultMerged = new ArrayList<List<List<NodeUtil>>>();
         for (List<List<List<NodeUtil>>> r : searchResult) {
-            toSearch.add(new ArrayList<NodeUtil>(r.get(0).get(0)));
+            List<List<NodeUtil>> tmp_1 = new ArrayList<List<NodeUtil>>();
+            for (List<List<NodeUtil>> c : r) {
+                tmp_1.addAll(c);
+            }
+            resultMerged.add(tmp_1);
         }
-        Pair<NodeUtil, List<List<NodeUtil>>> tmp = getOneCallPathTree(toSearch);
-        if (tmp != null) {
-            result.add(tmp);
-        }
+        //排列组合单行结果，并获取其根节点
+        Stack<List<NodeUtil>> toSearch = new Stack<List<NodeUtil>>();
+        List<NodeUtil> callOrder = new ArrayList<NodeUtil>();
+        treeToList(root, callOrder);
+        getAllCallTree(toSearch, resultMerged, result, callOrder);
+//        List<List<NodeUtil>> toSearch = new ArrayList<List<NodeUtil>>();
+        //第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
+//        for (List<List<List<NodeUtil>>> r : searchResult) {
+//            toSearch.add(new ArrayList<NodeUtil>(r.get(0).get(0)));
+//        }
+//        Pair<NodeUtil, List<List<NodeUtil>>> tmp = getOneCallPathTree(toSearch);
+//        if (tmp != null) {
+//            result.add(tmp);
+//        }
         return result;
     }
 
@@ -322,14 +336,16 @@ public class TreeUtil {
      * @param toSearch
      * @return 根节点和目标调用序列
      */
-    private Pair<NodeUtil, List<List<NodeUtil>>> getOneCallPathTree(List<List<NodeUtil>> toSearch) {
+    private Pair<NodeUtil, List<List<NodeUtil>>> getOneCallPathTree(List<List<NodeUtil>> toSearch, List<NodeUtil> callOrder) {
         if (toSearch == null) {
             return null;
         }
         if (toSearch.size() == 1) {
             return new Pair<NodeUtil, List<List<NodeUtil>>>(toSearch.get(0).get(0), toSearch);
         }
-        //// TODO: 4/14/16 toSearch顺序判定
+        if (!judCallOrder(toSearch, callOrder)) {
+            return null;
+        }
         List<NodeUtil> strNodes = new ArrayList<NodeUtil>();
         for (List<NodeUtil> r : toSearch) {
             strNodes.add(r.get(0));
@@ -375,6 +391,7 @@ public class TreeUtil {
 
     /**
      * 判定该root节点为根节点的子树是否包含所有目标节点
+     *
      * @param root
      * @param strNodes
      * @param containNum
@@ -401,5 +418,58 @@ public class TreeUtil {
             result += containNum.get(r);
         }
         containNum.put(root, result);
+    }
+
+    private void treeToList(NodeUtil root, List<NodeUtil> toList) {
+        if (root == null) return;
+        toList.add(root);
+        for (NodeUtil r : root.getChildNodes()) {
+            treeToList(r, toList);
+            toList.add(root);
+        }
+    }
+
+    void getAllCallTree(Stack<List<NodeUtil>> toSearch, List<List<List<NodeUtil>>> resultMerged,
+                        Set<Pair<NodeUtil, List<List<NodeUtil>>>> result, List<NodeUtil> callOrder) {
+        if (toSearch.size() == resultMerged.size()) {
+            List<List<NodeUtil>> searchInfo = new ArrayList<List<NodeUtil>>();
+            searchInfo.addAll(toSearch);
+            Pair<NodeUtil, List<List<NodeUtil>>> tmp = getOneCallPathTree(searchInfo, callOrder);
+            if (tmp != null) {
+                result.add(tmp);
+            }
+        } else {
+            for (List<NodeUtil> r : resultMerged.get(toSearch.size())) {
+                toSearch.push(r);
+                getAllCallTree(toSearch, resultMerged, result, callOrder);
+                toSearch.pop();
+            }
+        }
+    }
+
+    private boolean judCallOrder(List<List<NodeUtil>> toSearch, List<NodeUtil> callOrder) {
+        int callOrder_size = callOrder.size();
+        int toSearch_size = toSearch.size();
+        int iter_call = 0;
+        int iter_search = 0;
+        for (; iter_call < callOrder_size; ++iter_call) {
+            if (iter_search == toSearch_size) {
+                break;
+            } else {
+                List<NodeUtil> searchTmp = toSearch.get(iter_search);
+                List<NodeUtil> callTmp = callOrder.subList(iter_call,
+                        searchTmp.size() + iter_call > callOrder_size
+                                ? callOrder_size
+                                : searchTmp.size() + iter_call);
+                if (searchTmp.equals(callTmp)) {
+                    iter_search += 1;
+                    iter_call += searchTmp.size() - 2;
+                }
+            }
+        }
+        if (iter_search == toSearch_size) {
+            return true;
+        }
+        return false;
     }
 }
