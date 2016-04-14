@@ -89,7 +89,7 @@ public class DotUtil {
      * @param destDotFileName 目标dot代码文件名
      * @param fuzzySearch     是否是模糊查询
      */
-    public void generateMatchedDotCode(Set<Pair<NodeUtil, List<List<NodeUtil>>>> matchedResult,
+    public void generateMatchedDotCode(Pair<NodeUtil, List<List<NodeUtil>>> matchedResult,
                                        String destDotFileName, Boolean fuzzySearch) {
         String callSeqFile = fileUtil.getProjectDir() + "/out_dot.txt";
         try {
@@ -114,14 +114,14 @@ public class DotUtil {
             }
             // 遍历得到匹配的序列
             List<Pair<String, String>> matchedList = new ArrayList<Pair<String, String>>();
-            for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : matchedResult) {
-                for (List<NodeUtil> c : result_pair.second) {
-                    final int c_size_nl = c.size() - 1;
-                    for (int i = 0; i < c_size_nl; ++i) {
-                        matchedList.add(new Pair<String, String>(c.get(i).getName(), c.get(i + 1).getName()));
-                    }
+            Pair<NodeUtil, List<List<NodeUtil>>> result_pair = matchedResult;
+            for (List<NodeUtil> c : result_pair.second) {
+                final int c_size_nl = c.size() - 1;
+                for (int i = 0; i < c_size_nl; ++i) {
+                    matchedList.add(new Pair<String, String>(c.get(i).getName(), c.get(i + 1).getName()));
                 }
             }
+
             // 得到唯一的除去重复的调用序列
             // 比如有:A1->B2,B2->B3,A1->B2
             // 那么除去重复之后:A1->B2,B2->B3

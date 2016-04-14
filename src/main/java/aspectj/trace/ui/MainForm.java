@@ -83,8 +83,8 @@ public class MainForm extends Component {
         // 初始化各个输出文件名称
         originDotFileName = ajcCompiler.getOutFilePath() + "/dot/ori.dot";
         originDotOutPng = ajcCompiler.getOutFilePath() + "/dot/ori.png";
-        destDotFileName = ajcCompiler.getOutFilePath() + "/dot/match.dot";
-        destDotOutPng = ajcCompiler.getOutFilePath() + "/dot/match.png";
+        destDotFileName = ajcCompiler.getOutFilePath() + "/dot/match";
+        destDotOutPng = ajcCompiler.getOutFilePath() + "/dot/match";
     }
 
     /**
@@ -295,8 +295,14 @@ public class MainForm extends Component {
                 }
             }
             // 生成调用序列匹配的dot代码
-            dotUtil.generateMatchedDotCode(res, destDotFileName, fuzzySearch);
-            dotUtil.plotDot(destDotFileName, destDotOutPng);
+            Integer page = 0;
+            for (Pair<NodeUtil, List<List<NodeUtil>>> r : res) {
+                String dotName = destDotFileName + page + ".dot";
+                String pngName = destDotOutPng + page + ".png";
+                dotUtil.generateMatchedDotCode(r, dotName, fuzzySearch);
+                dotUtil.plotDot(dotName, pngName);
+                page++;
+            }
             /*对每行查询指令进行查询*/
 //            for (
 //                    String r
