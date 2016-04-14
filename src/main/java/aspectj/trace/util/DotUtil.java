@@ -2,9 +2,10 @@ package aspectj.trace.util;
 
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * DotUtil
@@ -60,12 +61,102 @@ public class DotUtil {
         ExecUtil.exec(execStr);
     }
 
+    /**
+     * 生成匹配之后的dot代码
+     *
+     * @param destDotFileName 目标dot代码文件名
+     */
+    public void generateMatchedDotCode(Set<Pair<NodeUtil, List<List<NodeUtil>>>> matchedResult,
+                                       String destDotFileName) {
+        String callSeqFile = fileUtil.getProjectDir() + "/out_dot.txt";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(callSeqFile));
+            // 得到所有的调用序列,并且初始化匹配为false
+            List<Pair<Pair<String, String>, Boolean>> allCallList = new ArrayList<Pair<Pair<String, String>, Boolean>>();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                line = line.substring(0, line.length() - 1);
+                String[] seqs_t = line.split("(->|\\s+)");
+                List<String> seqs_t2 = new ArrayList<String>();
+                for (String s : seqs_t) {
+                    if (s.equals("")) {
+                        continue;
+                    }
+                    seqs_t2.add(s);
+                }
+                String[] seqs = new String[]{seqs_t2.get(0), seqs_t2.get(1)};
+                Pair<Pair<String, String>, Boolean> pair = new Pair<Pair<String, String>, Boolean>(
+                        new Pair<String, String>(seqs[0], seqs[1]), false
+                );
+                allCallList.add(pair);
+            }
+            // 遍历得到匹配的序列
+            List<Pair<String, String>> matchedList = new ArrayList<Pair<String, String>>();
+            for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : matchedResult) {
+                for (List<NodeUtil> c : result_pair.second) {
+                    final int c_size_nl = c.size() - 1;
+                    for (int i = 0; i < c_size_nl; ++i) {
+                        matchedList.add(new Pair<String, String>(c.get(i).getName(), c.get(i + 1).getName()));
+                    }
+                }
+            }
+            // 在所有的调用序列中标记已经匹配到的
+            StringBuilder builder = new StringBuilder();
+            StringBuilder nodeBuilder = new StringBuilder();
+            for (Pair<Pair<String, String>, Boolean> pair : allCallList) {
+                String commonBlock = pair.first.first + " -> " + pair.first.second + ";\n";
+                Boolean match = false;
+                for (Pair<String, String> matchedPair : matchedList) {
+                    if (matchedPair.first.equals(pair.first.first)
+                            && matchedPair.second.equals(pair.first.second)) {
+                        String redBlock = matchedPair.first + " -> " + matchedPair.second + "[color=red];\n";
+                        builder.append(redBlock);
+                        nodeBuilder.append(matchedPair.first + "[color=red];\n");
+                        nodeBuilder.append(matchedPair.second + "[color=red];\n");
+                        match = true;
+                    }
+                }
+                if (!match) {
+                    builder.append(commonBlock);
+                }
+            }
+            builder.append(nodeBuilder.toString());
+            // 写入dot代码
+            File file = new File(destDotFileName);
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                FileWriter writer = new FileWriter(destDotFileName);
+                String dotContent = "digraph G {\n" +
+                        "    /*初始化节点和边的颜色*/\n" +
+                        "    node [peripheries=2 style=filled color=\"#eecc80\"]\n" +
+                        "    edge [color=\"sienna\" fontcolor=\"green\"]\n" + builder.toString() + "\n}";
+                writer.write(dotContent);
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         FileUtil fileUtil = new FileUtil();
         DotUtil dotUtil = new DotUtil();
+        // 生成dot代码
         String dotName = fileUtil.getOutFilePath() + "/dot/match.dot";
         String destFileName = fileUtil.getOutFilePath() + "/dot/match.png";
-        dotUtil.generateDotCode(dotName);
+//        dotUtil.generateDotCode(dotName);
         dotUtil.plotDot(dotName, destFileName);
+
     }
 }

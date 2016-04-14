@@ -334,6 +334,10 @@ public class TreeUtil {
         for (List<NodeUtil> r : toSearch) {
             strNodes.add(r.get(0));
         }
+        Set<NodeUtil> strNodes_t = new HashSet<NodeUtil>();
+        strNodes_t.addAll(strNodes);
+        strNodes.clear();
+        strNodes.addAll(strNodes_t);
         Map<NodeUtil, Integer> containNum = new HashMap<NodeUtil, Integer>();
         contains(root, strNodes, containNum);
         NodeUtil root = findRoot(this.root, strNodes, containNum);

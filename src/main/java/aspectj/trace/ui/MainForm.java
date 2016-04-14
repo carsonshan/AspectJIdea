@@ -41,7 +41,11 @@ public class MainForm extends Component {
     private AjcCompiler ajcCompiler;            // Ajc编译器
     private String className;                   // 被编译的文件的类名
 
-    private String outFileContent = "";                      //编译输出结果
+    private String outFileContent = "";         // 编译输出结果
+    private String originDotFileName;           // 原始调用序列的dot文件名
+    private String originDotOutPng;             // 原始dot语言生成的图片文件名
+    private String destDotFileName;             // 目标调用序列匹配的dot中间文件
+    private String destDotOutPng;               // 目标调用序列匹配的dot输出图片
 
     public MainForm() {
 
@@ -73,6 +77,11 @@ public class MainForm extends Component {
         // 查询按钮点击事件
         searchButton.addActionListener(new SearchListener());
 
+        // 初始化各个输出文件名称
+        originDotFileName = ajcCompiler.getOutFilePath() + "/dot/ori.dot";
+        originDotOutPng = ajcCompiler.getOutFilePath() + "/dot/ori.png";
+        destDotFileName = ajcCompiler.getOutFilePath() + "/dot/match.dot";
+        destDotOutPng = ajcCompiler.getOutFilePath() + "/dot/match.png";
     }
 
     /**
@@ -160,11 +169,9 @@ public class MainForm extends Component {
                         rawOutputTextArea.setText("");
                         rawOutputTextArea.append(outFileContent);
 
-                        // 绘制原始图形
-                        String dotName = ajcCompiler.getOutFilePath() + "/dot/ori.dot";
-                        String destFileName = ajcCompiler.getOutFilePath() + "/dot/ori.png";
-                        dotUtil.generateDotCode(dotName);
-                        dotUtil.plotDot(dotName, destFileName);
+                        // 绘制原始调用序列图形
+                        dotUtil.generateDotCode(originDotFileName);
+                        dotUtil.plotDot(originDotFileName, originDotOutPng);
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
@@ -253,7 +260,9 @@ public class MainForm extends Component {
                     finalShow.append(toshow);
                 }
             }
-
+            // 生成调用序列匹配的dot代码
+            dotUtil.generateMatchedDotCode(res, destDotFileName);
+            dotUtil.plotDot(destDotFileName, destDotOutPng);
             /*对每行查询指令进行查询*/
 //            for (
 //                    String r
