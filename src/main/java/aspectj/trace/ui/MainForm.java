@@ -1,14 +1,11 @@
 package aspectj.trace.ui;
 
 import aspectj.trace.core.compiler.AjcCompiler;
-<<<<<<< HEAD
 import aspectj.trace.util.*;
-=======
 import aspectj.trace.util.DotUtil;
 import aspectj.trace.util.FileUtil;
 import aspectj.trace.util.Pair;
 import aspectj.trace.util.TreeUtil;
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -127,10 +124,6 @@ public class MainForm extends Component {
             }
         }
     }
-<<<<<<< HEAD
-    //
-=======
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
 
     /**
      * 编译按钮点击事件
@@ -216,7 +209,6 @@ public class MainForm extends Component {
                         unit.add(k);
                     }
                 }
-<<<<<<< HEAD
                 int unitSize = unit.size();
                 if (unitSize % 2 != 1 || unitSize < 3) {
                     finalShow = new StringBuilder();
@@ -238,22 +230,11 @@ public class MainForm extends Component {
                         finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
                         matchTextArea.append(finalShow.toString());
                         return;
-=======
-                //A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7 --> A8 --> A9 --> A10
-                int comSize = com.size();
-                boolean checkInput = true;
-                int comIndex = 0;
-                LinkedList<String> functions = new LinkedList<String>();
-                for (; comIndex + 1 < comSize; comIndex += 2) {
-                    if (!com.get(comIndex + 1).equals("-->")) {
-                        checkInput = false;
-                        break;
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                     }
                 }
-<<<<<<< HEAD
                 searchOrder.add(oneSearch);
             }
+            //这个是返回的结果，是Pair<根节点 ，List<路径节点>>的结构，目前size只有1或者0
             Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
             for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : res) {
                 finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "\n");
@@ -265,32 +246,6 @@ public class MainForm extends Component {
                         toshow.append(linenum++ + ":");
                         for (int j = 0; j < indent; ++j) {
                             toshow.append("    ");
-=======
-
-                if (comSize < 3 || comSize % 2 != 1 || !checkInput) {
-                    finalShow.append(linenum + ":ERROR!   wrong input!  -- " + r);
-                    linenum++;
-                } else {
-                    /*添加最后的目标函数*/
-                    functions.add(com.get(comSize - 1));
-                    /*掐头去尾*/
-                    String src = functions.removeFirst();
-                    String dst = functions.removeLast();
-                    /*查询结果存入字符串*/
-                    String[] paths = functions.toArray(new String[functions.size()]);
-                    List<List<Pair<String, Pair<String, String>>>> result = callTree.getCallPathMultiNode(src, dst, paths);
-                    for (List<Pair<String, Pair<String, String>>> c : result) {
-                        int indent = 0;
-                        StringBuilder toshow = new StringBuilder();
-                        for (Pair<String, Pair<String, String>> t : c) {
-                            toshow.append(linenum + ":");
-                            for (int i = 0; i < indent; ++i) {
-                                toshow.append("    ");
-                            }
-                            toshow.append(t.second.first + " --> " + t.second.second + "    " + t.first + "\n");
-                            indent++;
-                            linenum++;
->>>>>>> 221f266a025419de4cdc8bd8e19d6c271c14bed1
                         }
                         toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
                         indent++;
