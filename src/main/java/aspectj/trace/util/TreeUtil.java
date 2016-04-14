@@ -1,6 +1,5 @@
 package aspectj.trace.util;
 
-import javax.xml.soap.Node;
 import java.util.*;
 
 /**
@@ -12,6 +11,51 @@ public class TreeUtil {
 
     public TreeUtil() {
         root = now = null;
+    }
+
+
+    public String getDot(Pair<NodeUtil, List<List<NodeUtil>>> result){
+        StringBuilder dotString = new StringBuilder();
+        dotString.append("digraph G {\n" +
+                "    /*初始化节点和边的颜色*/\n" +
+                "    node [peripheries=2 style=filled color=\"#eecc80\"]\n" +
+                "    edge [color=\"sienna\" fontcolor=\"red\"]\n");
+        Integer strNum = 0;
+        Set<NodeUtil> redNode = new HashSet<NodeUtil>();
+        dotString.append(toDot(root,result,strNum,redNode));
+        for (NodeUtil r: redNode){
+            //A3[color=red];
+            dotString.append(r.getName() + "[color=red]\n");
+        }
+        dotString.append(result.first.getName()+"[color=blue]\n}");
+        return  dotString.toString();
+    }
+
+    private String toDot(NodeUtil root, Pair<NodeUtil, List<List<NodeUtil>>> result,Integer strNum ,Set<NodeUtil> redNode){
+        StringBuilder toDotString = new StringBuilder();
+        for(NodeUtil r:root.getChildNodes()){
+            toDotString.append( root.getName() + " -> " + r.getName() + "[label=" + strNum++); // color=red style=dotted];")
+            for(List<NodeUtil> c:result.second){
+                int c_size_nl = c.size() - 1;
+                int i;
+                for(i=0;i<c_size_nl;++i){
+                    if(c.get(i) == root && c.get(i+1) == r){
+                        redNode.add(root);
+                        redNode.add(r);
+                        break;
+                    }
+                }
+                if(i<c_size_nl){
+                    toDotString.append(" color=red");
+                    if(c_size_nl > 1){
+                        toDotString.append("  style=dotted");
+                    }
+                }
+            }
+            toDotString.append("];\n");
+            toDotString.append(toDot(r,result,strNum,redNode));
+        }
+        return toDotString.toString();
     }
 
     /**
