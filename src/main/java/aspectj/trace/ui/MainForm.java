@@ -37,7 +37,8 @@ public class MainForm extends Component {
     private JTextArea matchTextArea;            // 匹配区内容
     private JTextArea inputTextArea;            // 输入匹配区内容
     private JLabel fileNamesLabel;
-    private JButton searchButton;
+    private JButton searchButton;               // 搜索按钮
+    private JButton inputChooseBtn;             // 选择输入文本的按钮
     private AjcCompiler ajcCompiler;            // Ajc编译器
     private String className;                   // 被编译的文件的类名
 
@@ -70,8 +71,10 @@ public class MainForm extends Component {
         // 初始化ajc编译器
         ajcCompiler = new AjcCompiler();
 
-        // 选择文件按钮点击事件
+        // 选择编译文件按钮点击事件
         fileChooseBtn.addActionListener(new FileChooseListener());
+        // 选择输入序列文件按钮点击事件
+        inputChooseBtn.addActionListener(new InputFileChooseListener());
         // 编译按钮点击事件
         compileBtn.addActionListener(new ComplierListener());
         // 查询按钮点击事件
@@ -85,7 +88,7 @@ public class MainForm extends Component {
     }
 
     /**
-     * 选择文件执行的事件
+     * 选择编译文件执行的事件
      */
     private class FileChooseListener implements ActionListener {
 
@@ -126,6 +129,35 @@ public class MainForm extends Component {
                         String content = outFilePath + "/TraceApp.aj\n" + outFilePath + "/" + fileName;
                         logger.error(content);
                         FileUtil.writeToFile(ajcCompiler.getOutFilePath() + "/sources.lst", content);
+                    }
+                }).run();
+            } else if (rVal == JFileChooser.CANCEL_OPTION) {
+                logger.info("Cancel choose file...");
+            }
+        }
+    }
+
+    /**
+     * 选择输入序列文件按钮点击事件
+     */
+    private class InputFileChooseListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser chooser = new JFileChooser(); // 选择文件对话框
+            chooser.setMultiSelectionEnabled(false); // 暂时只选择单个文件
+            int rVal = chooser.showOpenDialog(MainForm.this); // 显示对话框
+            if (rVal == JFileChooser.APPROVE_OPTION) {// 确定按钮
+                final String fileName = chooser.getSelectedFile().getName(); // 选择文件的文件名
+                final String filePath = chooser.getCurrentDirectory().toString()
+                        + File.separator + fileName; // 选择文件的文件路径
+
+                // 开启线程读文件并显示到界面上
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String fileContent = FileUtil.readFileContent(filePath);
+                        inputTextArea.setText(fileContent);
                     }
                 }).run();
             } else if (rVal == JFileChooser.CANCEL_OPTION) {
@@ -245,7 +277,7 @@ public class MainForm extends Component {
             //这个是返回的结果，是Pair<根节点 ，List<路径节点>>的结构，目前size只有1或者0
             Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
             for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : res) {
-                finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "\n");
+                //finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "\n");
                 for (List<NodeUtil> c : result_pair.second) {
                     int indent = 0;
                     StringBuilder toshow = new StringBuilder();
