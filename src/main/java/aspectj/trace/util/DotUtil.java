@@ -24,7 +24,30 @@ public class DotUtil {
     public void generateDotCode(String fileName) {
         FileUtil fileUtil = new FileUtil();
         String callSeqFile = fileUtil.getProjectDir() + "/out_dot.txt";
-        String callSeqFileContent = FileUtil.readFileContent(callSeqFile);
+        String callSeqFileWithNumber = fileUtil.getProjectDir() + "/out_dot_number.txt";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(callSeqFile));
+            FileWriter numberWriter = new FileWriter(callSeqFileWithNumber);
+            File numberFile = new File(callSeqFileWithNumber);
+            if (!numberFile.exists()) {
+                numberFile.createNewFile();
+            }
+
+            String line = "";
+            Integer number = 0;
+            while ((line = reader.readLine()) != null) {
+                number++;
+                numberWriter.write(line + "[label=" + number + "];\n");
+            }
+            numberWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 读入文件
+        String callSeqFileContent = FileUtil.readFileContent(callSeqFileWithNumber);
         File file = new File(fileName);
         if (!file.exists()) {
             try {
@@ -38,7 +61,7 @@ public class DotUtil {
             String dotContent = "digraph G {\n" +
                     "    /*初始化节点和边的颜色*/\n" +
                     "    node [peripheries=2 style=filled color=\"#eecc80\"]\n" +
-                    "    edge [color=\"sienna\" fontcolor=\"green\"]\n" + callSeqFileContent + "\n}";
+                    "    edge [color=\"sienna\" fontcolor=\"red\"]\n" + callSeqFileContent + "\n}";
             writer.write(dotContent);
             writer.close();
         } catch (IOException e) {
@@ -162,7 +185,7 @@ public class DotUtil {
                 String dotContent = "digraph G {\n" +
                         "    /*初始化节点和边的颜色*/\n" +
                         "    node [peripheries=2 style=filled color=\"#eecc80\"]\n" +
-                        "    edge [color=\"sienna\" fontcolor=\"green\"]\n" + builder.toString() + "\n}";
+                        "    edge [color=\"sienna\" fontcolor=\"red\"]\n" + builder.toString() + "\n}";
                 writer.write(dotContent);
                 writer.close();
             } catch (IOException e) {
@@ -182,8 +205,7 @@ public class DotUtil {
         // 生成dot代码
         String dotName = fileUtil.getOutFilePath() + "/dot/match.dot";
         String destFileName = fileUtil.getOutFilePath() + "/dot/match.png";
-//        dotUtil.generateDotCode(dotName);
+        dotUtil.generateDotCode(dotName);
         dotUtil.plotDot(dotName, destFileName);
-
     }
 }
