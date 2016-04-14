@@ -6,5 +6,6 @@
 target
 out/*.java
 out/*.lst
+out/dot/*.png
 src/main/resources/sysconfig.properties
 src/main/resources/sources.lst
