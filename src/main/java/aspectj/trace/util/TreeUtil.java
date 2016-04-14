@@ -33,6 +33,8 @@ public class TreeUtil {
 
 
     /**
+     * 按照要求查询条件单行查询所有查询
+     *
      * @param searchOrder
      * @return 外层list：不同行查询；第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
      */
@@ -49,10 +51,10 @@ public class TreeUtil {
     }
 
     /**
-     * 获取一个
+     * 获取符合条件的查询树集合
      *
      * @param searchOrder
-     * @return
+     * @return Set<Pair<树根节点, 所有调用路径>>
      */
     public Set<Pair<NodeUtil, List<List<NodeUtil>>>> getCallPathTreeOrdered(List<SearchInfoUtil> searchOrder) {
         Set<Pair<NodeUtil, List<List<NodeUtil>>>> result = new HashSet<Pair<NodeUtil, List<List<NodeUtil>>>>();
@@ -67,7 +69,10 @@ public class TreeUtil {
         for (List<List<List<NodeUtil>>> r : searchResult) {
             toSearch.add(new ArrayList<NodeUtil>(r.get(0).get(0)));
         }
-        getOneCallPathTree(result, toSearch);
+        Pair<NodeUtil, List<List<NodeUtil>>> tmp = getOneCallPathTree(toSearch);
+        if (tmp != null) {
+            result.add(tmp);
+        }
         return result;
     }
 
@@ -311,22 +316,27 @@ public class TreeUtil {
         return result;
     }
 
-    private void getOneCallPathTree(Set<Pair<NodeUtil, List<List<NodeUtil>>>> result, List<List<NodeUtil>> toSearch) {
+    /**
+     * 根据目标调用序列获取符合目标调用序列的最小子树根节点
+     *
+     * @param toSearch
+     * @return 根节点和目标调用序列
+     */
+    private Pair<NodeUtil, List<List<NodeUtil>>> getOneCallPathTree(List<List<NodeUtil>> toSearch) {
         if (toSearch == null) {
-            return;
+            return null;
         }
         if (toSearch.size() == 1) {
-            result.add(new Pair<NodeUtil, List<List<NodeUtil>>>(toSearch.get(0).get(0),toSearch));
-            return;
+            return new Pair<NodeUtil, List<List<NodeUtil>>>(toSearch.get(0).get(0), toSearch);
         }
         //// TODO: 4/14/16 toSearch顺序判定
         List<NodeUtil> strNodes = new ArrayList<NodeUtil>();
         for (List<NodeUtil> r : toSearch) {
             strNodes.add(r.get(0));
         }
-        Map<NodeUtil,Integer> containNum = new HashMap<NodeUtil, Integer>();
+        Map<NodeUtil, Integer> containNum = new HashMap<NodeUtil, Integer>();
         contains(root, strNodes, containNum);
-        NodeUtil root = findRoot(this.root, strNodes,containNum);
+        NodeUtil root = findRoot(this.root, strNodes, containNum);
         if (root != null) {
 //            Set<NodeUtil> runIn = new HashSet<NodeUtil>();
 //            for (List<NodeUtil> r : toSearch) {
@@ -334,16 +344,24 @@ public class TreeUtil {
 //            }
 //            List<NodeUtil> nodes = new ArrayList<NodeUtil>();
 //            nodes.addAll(runIn);
-            result.add(new Pair<NodeUtil, List<List<NodeUtil>>>(root, toSearch));
+            return new Pair<NodeUtil, List<List<NodeUtil>>>(root, toSearch);
         }
+        return null;
     }
 
-    private NodeUtil findRoot(NodeUtil root, List<NodeUtil> strNodes,Map<NodeUtil,Integer> containNum) {
-        if (containAll(root, strNodes,containNum)) {
+    /**
+     * 在以root为根节点的树中根据目标节点获取包含目标节点的最小子树根节点
+     *
+     * @param root
+     * @param strNodes
+     * @param containNum 每个节点包含的目标节点的个数
+     * @return
+     */
+    private NodeUtil findRoot(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil, Integer> containNum) {
+        if (containAll(root, strNodes, containNum)) {
             for (NodeUtil r : root.getChildNodes()) {
-                if (containAll(r, strNodes,containNum)) {
-                    //// TODO: 4/14/16 多个子树满足条件判定
-                    return findRoot(r, strNodes,containNum);
+                if (containAll(r, strNodes, containNum)) {
+                    return findRoot(r, strNodes, containNum);
                 }
             }
             return root;
@@ -351,11 +369,25 @@ public class TreeUtil {
         return null;
     }
 
-    private boolean containAll(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil,Integer> containNum) {
+    /**
+     * 判定该root节点为根节点的子树是否包含所有目标节点
+     * @param root
+     * @param strNodes
+     * @param containNum
+     * @return
+     */
+    private boolean containAll(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil, Integer> containNum) {
         return containNum.get(root) == strNodes.size();
     }
 
-    private void contains(NodeUtil root, List<NodeUtil> strNodes,Map<NodeUtil,Integer> containNum) {
+    /**
+     * 统计以root为根节点的树的所有子节点为根的树中包含目标节点的个数，并存入containNum
+     *
+     * @param root
+     * @param strNodes
+     * @param containNum
+     */
+    private void contains(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil, Integer> containNum) {
         int result = 0;
         if (strNodes.contains(root)) {
             result++;
@@ -364,6 +396,6 @@ public class TreeUtil {
             contains(r, strNodes, containNum);
             result += containNum.get(r);
         }
-        containNum.put(root,result);
+        containNum.put(root, result);
     }
 }
