@@ -1,5 +1,8 @@
 # 利用 AspectJ 追踪程序调用序列
 
+# 界面
+![original](img/ui.png)
+
 # 原始图
 ![original](img/ori.png)
 
