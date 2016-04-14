@@ -54,8 +54,8 @@ public class TreeUtil {
      * @param searchOrder
      * @return
      */
-    public Set<Pair<NodeUtil, List<NodeUtil>>> getCallPathTreeOrdered(List<SearchInfoUtil> searchOrder) {
-        Set<Pair<NodeUtil, List<NodeUtil>>> result = new HashSet<Pair<NodeUtil, List<NodeUtil>>>();
+    public Set<Pair<NodeUtil, List<List<NodeUtil>>>> getCallPathTreeOrdered(List<SearchInfoUtil> searchOrder) {
+        Set<Pair<NodeUtil, List<List<NodeUtil>>>> result = new HashSet<Pair<NodeUtil, List<List<NodeUtil>>>>();
         //外层list：不同行查询；第三层list：名称相同但位置不同的根节点；第二层list：不同路径；内层list：路径上节点
         List<List<List<List<NodeUtil>>>> searchResult = getCallPathOrdered(searchOrder);
         if (searchResult == null || searchResult.isEmpty()) {
@@ -67,7 +67,7 @@ public class TreeUtil {
         for (List<List<List<NodeUtil>>> r : searchResult) {
             toSearch.add(new ArrayList<NodeUtil>(r.get(0).get(0)));
         }
-        getOneCallPathTree(result,toSearch);
+        getOneCallPathTree(result, toSearch);
         return result;
     }
 
@@ -311,56 +311,59 @@ public class TreeUtil {
         return result;
     }
 
-    private void getOneCallPathTree(Set<Pair<NodeUtil, List<NodeUtil>>> result, List<List<NodeUtil>> toSearch) {
-        if(toSearch == null){
+    private void getOneCallPathTree(Set<Pair<NodeUtil, List<List<NodeUtil>>>> result, List<List<NodeUtil>> toSearch) {
+        if (toSearch == null) {
             return;
         }
-        if(toSearch.size() == 1){
-            result.add(new Pair<NodeUtil, List<NodeUtil>>(toSearch.get(0).get(0),toSearch.get(0)));
+        if (toSearch.size() == 1) {
+            result.add(new Pair<NodeUtil, List<List<NodeUtil>>>(toSearch.get(0).get(0),toSearch));
             return;
         }
         //// TODO: 4/14/16 toSearch顺序判定
         List<NodeUtil> strNodes = new ArrayList<NodeUtil>();
-        for(List<NodeUtil> r:toSearch){
+        for (List<NodeUtil> r : toSearch) {
             strNodes.add(r.get(0));
         }
-        NodeUtil root = findRoot(this.root,strNodes);
-        if(root != null){
-            Set<NodeUtil> runIn= new HashSet<NodeUtil>();
-            for(List<NodeUtil> r:toSearch){
-                runIn.addAll(r);
-            }
-            List<NodeUtil> nodes = new ArrayList<NodeUtil>();
-            nodes.addAll(runIn);
-            result.add(new Pair<NodeUtil, List<NodeUtil>>(root, nodes));
+        Map<NodeUtil,Integer> containNum = new HashMap<NodeUtil, Integer>();
+        contains(root, strNodes, containNum);
+        NodeUtil root = findRoot(this.root, strNodes,containNum);
+        if (root != null) {
+//            Set<NodeUtil> runIn = new HashSet<NodeUtil>();
+//            for (List<NodeUtil> r : toSearch) {
+//                runIn.addAll(r);
+//            }
+//            List<NodeUtil> nodes = new ArrayList<NodeUtil>();
+//            nodes.addAll(runIn);
+            result.add(new Pair<NodeUtil, List<List<NodeUtil>>>(root, toSearch));
         }
     }
 
-    private NodeUtil findRoot(NodeUtil root, List<NodeUtil> strNodes){
-        for(NodeUtil r:root.getChildNodes()){
-            if(containAll(r,strNodes)){
-                //// TODO: 4/14/16 多个子树满足条件判定
-                return findRoot(root,strNodes);
+    private NodeUtil findRoot(NodeUtil root, List<NodeUtil> strNodes,Map<NodeUtil,Integer> containNum) {
+        if (containAll(root, strNodes,containNum)) {
+            for (NodeUtil r : root.getChildNodes()) {
+                if (containAll(r, strNodes,containNum)) {
+                    //// TODO: 4/14/16 多个子树满足条件判定
+                    return findRoot(r, strNodes,containNum);
+                }
             }
-        }
-        if(containAll(root,strNodes)){
             return root;
         }
         return null;
     }
 
-    private boolean containAll(NodeUtil root, List<NodeUtil> strNodes){
-        return contains(root,strNodes) == strNodes.size();
+    private boolean containAll(NodeUtil root, List<NodeUtil> strNodes, Map<NodeUtil,Integer> containNum) {
+        return containNum.get(root) == strNodes.size();
     }
 
-    private int contains(NodeUtil root, List<NodeUtil> strNodes){
-        int result =0;
-        if(strNodes.contains(root)){
+    private void contains(NodeUtil root, List<NodeUtil> strNodes,Map<NodeUtil,Integer> containNum) {
+        int result = 0;
+        if (strNodes.contains(root)) {
             result++;
         }
-        for (NodeUtil r:root.getChildNodes()) {
-            result+=contains(r,strNodes);
+        for (NodeUtil r : root.getChildNodes()) {
+            contains(r, strNodes, containNum);
+            result += containNum.get(r);
         }
-        return result;
+        containNum.put(root,result);
     }
 }

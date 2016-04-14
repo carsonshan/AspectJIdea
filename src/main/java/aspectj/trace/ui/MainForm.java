@@ -206,21 +206,23 @@ public class MainForm extends Component {
                 }
                 searchOrder.add(oneSearch);
             }
-            List<List<NodeUtil>> result = callTree.test(searchOrder);
-            for (List<NodeUtil> c : result) {
-                int indent = 0;
-                StringBuilder toshow = new StringBuilder();
-                final int c_size_nl = c.size() - 1;
-                for (int i = 0; i < c_size_nl; ++i) {
-                    toshow.append(linenum + ":");
-                    for (int j = 0; j < indent; ++j) {
-                        toshow.append("    ");
+            Set<Pair<NodeUtil, List<List<NodeUtil>>>> res = callTree.getCallPathTreeOrdered(searchOrder);
+            for (Pair<NodeUtil, List<List<NodeUtil>>> result_pair : res) {
+                finalShow.append(linenum++ + ":ROOT:" + result_pair.first.getName() + "\n");
+                for (List<NodeUtil> c : result_pair.second) {
+                    int indent = 0;
+                    StringBuilder toshow = new StringBuilder();
+                    final int c_size_nl = c.size() - 1;
+                    for (int i = 0; i < c_size_nl; ++i) {
+                        toshow.append(linenum++ + ":");
+                        for (int j = 0; j < indent; ++j) {
+                            toshow.append("    ");
+                        }
+                        toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
+                        indent++;
                     }
-                    toshow.append(c.get(i).getName() + " --> " + c.get(i + 1).getName() + "    " + c.get(i + 1).getCallLocation() + "\n");
-                    indent++;
-                    linenum++;
+                    finalShow.append(toshow);
                 }
-                finalShow.append(toshow);
             }
 
             /*对每行查询指令进行查询*/
