@@ -12,5 +12,5 @@
 # Dot 语言常用命令
 ```
 # 生成图形
-dot -Tpng 1.dot -o 1.png
+dot -Tpng x.dot -o x.png
 ```
