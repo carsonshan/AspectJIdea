@@ -1,6 +1,7 @@
 package aspectj.trace.util;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.net.SyslogAppender;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 /**
  * Libgen
- *
+ * <p/>
  * Author: Noprom <tyee.noprom@qq.com>
  * Date: 4/30/16 9:42 AM.
  */
@@ -22,8 +23,8 @@ public class Libgen {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
-            String cmd;
             while ((line = reader.readLine()) != null) {
+                String cmd;
                 line = line.split("magnet")[0];
                 line = line.trim();
                 line = "http://libgen.io/repository_torrent/" + line;
