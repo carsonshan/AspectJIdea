@@ -2,7 +2,7 @@
 .idea
 *.log
 *.class
-*.txt
+/*.txt
 *.iml
 target
 out/*.java
