@@ -40,16 +40,7 @@ public aspect TraceApp {
         AjcCompiler ajcCompiler = new AjcCompiler();
         // 初始化文件的路径
         File classPath = new File(this.getClass().getResource("/").getPath());
-//        File targetPath = new File(classPath.getParent());
-//        File projectPath = new File(targetPath.getParent());
-//        this.outFilePath = projectPath.getAbsolutePath() + "/out";
         this._SavePath = classPath.getAbsolutePath() + "/out.txt";
-//        logger.debug(ajcCompiler.getOutFilePath());
-
-//        File file = new File(_SavePath);
-//        if (!file.exists()) {
-//            file.createNewFile();
-//        }
         //程序入口，一般为main
         _Stack.push("main");
         //创建输出流
@@ -77,44 +68,21 @@ public aspect TraceApp {
             Object signature = thisJoinPoint.getSignature();
 
             if (!_Stack.empty()) {
-                //System.out.println(_Stack.peek() + " --> " + signature);
                 System.out.println(_Stack.peek() + " --> " + name);
 
                 //写入文件
                 try {
-                    //_OS.write((_Stack.peek() + " --> " + signature + "\n").getBytes());
                     _OS.write((_Stack.peek() + " --> " + name + "\n").getBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             } else {
-//                System.out.println("main" + " --> " + signature);
-//                try {
-//                    _OS.write(("main" + " --> " + signature + "\n").getBytes());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
             }
-            //_Stack.push(signature);
             _Stack.push(name);
         } else {
-            // 不输出执行的位置
-            //System.out.println(thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
-            //System.out.println(name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString());
-
-            //写入文件
-//            try {
-////                _OS.write((thisJoinPoint.toString() + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
-////                        + "\n").getBytes());
-//                // 写入执行的位置
-//                _OS.write((name + "\t" + thisJoinPoint.getStaticPart().getSourceLocation().toString()
-//                        + "\n").getBytes());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            
         }
     }
-
 
     after(): loggedOperations(){
         _indentationLevel--;
@@ -129,7 +97,6 @@ public aspect TraceApp {
                 _Stack.pop();
         }
     }
-
 
     before(): call(* java.io.PrintStream.println(..)) && within(aspectj.trace.core.aspectj.TraceApp+) {
         for (int i = 0, spaces = _indentationLevel*4 ; i < spaces; ++i) {
