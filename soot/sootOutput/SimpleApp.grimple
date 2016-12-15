@@ -1,0 +1,536 @@
+public class SimpleApp extends java.lang.Object
+{
+
+    public void A1()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A1");
+
+        this.<SimpleApp: void A2()>();
+
+        this.<SimpleApp: void B6()>();
+
+        this.<SimpleApp: void C10()>();
+
+        this.<SimpleApp: void C9()>();
+
+        this.<SimpleApp: void C8()>();
+
+        return;
+    }
+
+    public void A2()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A2");
+
+        this.<SimpleApp: void A3()>();
+
+        this.<SimpleApp: void B5()>();
+
+        return;
+    }
+
+    public void A3()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A3");
+
+        this.<SimpleApp: void A4()>();
+
+        this.<SimpleApp: void B4()>();
+
+        return;
+    }
+
+    public void A4()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A4");
+
+        this.<SimpleApp: void A5()>();
+
+        this.<SimpleApp: void B3()>();
+
+        return;
+    }
+
+    public void A5()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A5");
+
+        this.<SimpleApp: void A6()>();
+
+        this.<SimpleApp: void B2()>();
+
+        return;
+    }
+
+    public void A6()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A6");
+
+        this.<SimpleApp: void A7()>();
+
+        this.<SimpleApp: void B1()>();
+
+        return;
+    }
+
+    public void A7()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A7");
+
+        this.<SimpleApp: void A8()>();
+
+        this.<SimpleApp: void A9()>();
+
+        this.<SimpleApp: void A10()>();
+
+        this.<SimpleApp: void B1()>();
+
+        this.<SimpleApp: void B2()>();
+
+        this.<SimpleApp: void B3()>();
+
+        return;
+    }
+
+    public void A8()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A8");
+
+        return;
+    }
+
+    public void A9()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A9");
+
+        return;
+    }
+
+    public void A10()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In A10");
+
+        return;
+    }
+
+    public void B1()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B1");
+
+        return;
+    }
+
+    public void B2()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B2");
+
+        return;
+    }
+
+    public void B3()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B3");
+
+        return;
+    }
+
+    public void B4()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B4");
+
+        return;
+    }
+
+    public void B5()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B5");
+
+        return;
+    }
+
+    public void B6()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B6");
+
+        this.<SimpleApp: void B7()>();
+
+        this.<SimpleApp: void B7()>();
+
+        this.<SimpleApp: void C10()>();
+
+        return;
+    }
+
+    public void B7()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B7");
+
+        this.<SimpleApp: void B8()>();
+
+        this.<SimpleApp: void C9()>();
+
+        return;
+    }
+
+    public void B8()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B8");
+
+        this.<SimpleApp: void B9()>();
+
+        this.<SimpleApp: void C8()>();
+
+        return;
+    }
+
+    public void B9()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B9");
+
+        this.<SimpleApp: void B10()>();
+
+        this.<SimpleApp: void C7()>();
+
+        return;
+    }
+
+    public void B10()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In B10");
+
+        this.<SimpleApp: void C2()>();
+
+        this.<SimpleApp: void C3()>();
+
+        this.<SimpleApp: void C4()>();
+
+        this.<SimpleApp: void C6()>();
+
+        return;
+    }
+
+    public void C1()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C1");
+
+        return;
+    }
+
+    public void C2()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C2");
+
+        this.<SimpleApp: void C3()>();
+
+        this.<SimpleApp: void C4()>();
+
+        return;
+    }
+
+    public void C3()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C3");
+
+        this.<SimpleApp: void C5()>();
+
+        return;
+    }
+
+    public void C4()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C4");
+
+        this.<SimpleApp: void C5()>();
+
+        return;
+    }
+
+    public void C5()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C5");
+
+        this.<SimpleApp: void C6()>();
+
+        this.<SimpleApp: void C7()>();
+
+        return;
+    }
+
+    public void C6()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C6");
+
+        return;
+    }
+
+    public void C7()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C7");
+
+        return;
+    }
+
+    public void C8()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C8");
+
+        this.<SimpleApp: void C10()>();
+
+        return;
+    }
+
+    public void C9()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C9");
+
+        this.<SimpleApp: void C10()>();
+
+        this.<SimpleApp: void C10()>();
+
+        this.<SimpleApp: void C10()>();
+
+        return;
+    }
+
+    public void C10()
+    {
+        SimpleApp this;
+        java.io.PrintStream temp$0;
+
+        this := @this: SimpleApp;
+
+        temp$0 = <java.lang.System: java.io.PrintStream out>;
+
+        temp$0.<java.io.PrintStream: void println(java.lang.String)>("In C10");
+
+        return;
+    }
+
+    public static void main(java.lang.String[]) throws java.io.IOException
+    {
+        java.lang.String[] args;
+        SimpleApp temp$0;
+
+        args := @parameter0: java.lang.String[];
+
+        temp$0 = new SimpleApp();
+
+        temp$0.<SimpleApp: void A1()>();
+
+        return;
+    }
+
+    public void <init>()
+    {
+        SimpleApp this;
+
+        this := @this: SimpleApp;
+
+        this.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+}
