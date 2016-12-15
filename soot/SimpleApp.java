@@ -1,4 +1,4 @@
-package aspectj.trace.core.app;
+// package aspectj.trace.core.app;
 
 import java.io.IOException;
 
