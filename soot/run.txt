@@ -1,2 +1,3 @@
 java -cp soot-trunk.jar soot.Main -cp .:/Library/Java/JavaVirtualMachines/jdk/Contents/Home/jre/lib/rt.jar SimpleApp
 java -cp soot-trunk.jar soot.Main -cp .:/Library/Java/JavaVirtualMachines/jdk/Contents/Home/jre/lib/rt.jar -f J SimpleApp
+java -cp soot-trunk.jar soot.Main -cp .:/Library/Java/JavaVirtualMachines/jdk/Contents/Home/jre/lib/rt.jar -f shimple SimpleApp
