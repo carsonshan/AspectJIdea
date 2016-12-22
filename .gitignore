@@ -10,3 +10,4 @@ out/*.lst
 out/dot/*
 src/main/resources/sysconfig.properties
 src/main/resources/sources.lst
+*.jar
