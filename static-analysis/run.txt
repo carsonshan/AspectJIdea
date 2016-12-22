@@ -1,1 +1,2 @@
 java -jar javacg-0.1-SNAPSHOT-static.jar SimpleApp.jar > out.txt
+sed -E 's/[a-z]+\.//g;s/ / --> /; s/[$|\:]/_/g'  callgraph.txt
