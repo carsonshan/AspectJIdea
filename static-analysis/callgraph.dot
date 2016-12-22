@@ -1,3 +1,7 @@
+digraph G {
+    /*初始化节点和边的颜色*/
+    node [peripheries=2 style=filled color="#eecc80"]
+    edge [color="sienna" fontcolor="red"]
 A1 -> A2
 A1 -> B6
 A1 -> C10
@@ -42,3 +46,4 @@ C8 -> C10
 C9 -> C10
 C9 -> C10
 C9 -> C10
+}

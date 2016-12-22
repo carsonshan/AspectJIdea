@@ -1,4 +1,3 @@
-C:aspectj.trace.core.app.SimpleApp aspectj.trace.core.app.SimpleApp
 M:aspectj.trace.core.app.SimpleApp:A1 (M)aspectj.trace.core.app.SimpleApp:A2
 M:aspectj.trace.core.app.SimpleApp:A1 (M)aspectj.trace.core.app.SimpleApp:B6
 M:aspectj.trace.core.app.SimpleApp:A1 (M)aspectj.trace.core.app.SimpleApp:C10
@@ -43,5 +42,3 @@ M:aspectj.trace.core.app.SimpleApp:C8 (M)aspectj.trace.core.app.SimpleApp:C10
 M:aspectj.trace.core.app.SimpleApp:C9 (M)aspectj.trace.core.app.SimpleApp:C10
 M:aspectj.trace.core.app.SimpleApp:C9 (M)aspectj.trace.core.app.SimpleApp:C10
 M:aspectj.trace.core.app.SimpleApp:C9 (M)aspectj.trace.core.app.SimpleApp:C10
-M:aspectj.trace.core.app.SimpleApp:main (O)aspectj.trace.core.app.SimpleApp:<init>
-M:aspectj.trace.core.app.SimpleApp:main (M)aspectj.trace.core.app.SimpleApp:A1
